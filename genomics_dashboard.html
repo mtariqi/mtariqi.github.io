@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genomics Project Dashboard — Md Tariqul Islam</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg-sec: #f7f8f9; --bg-ter: #f0f1f3;
+    --text: #111; --text-sec: #555; --text-ter: #888;
+    --border: rgba(0,0,0,0.09); --border-med: rgba(0,0,0,0.16);
+    --green: #0F6E56; --green-light: #5DCAA5; --green-bg: #E1F5EE;
+    --blue: #185FA5; --blue-light: #378ADD; --blue-bg: #E6F1FB;
+    --red: #A32D2D; --red-light: #E24B4A; --red-bg: #FCEBEB;
+    --amber: #854F0B; --amber-bg: #FAEEDA;
+    --gray: #B4B2A9;
+    --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111; --bg-sec: #1a1a1a; --bg-ter: #222;
+      --text: #f0f0f0; --text-sec: #aaa; --text-ter: #666;
+      --border: rgba(255,255,255,0.09); --border-med: rgba(255,255,255,0.18);
+      --green: #5DCAA5; --green-bg: #04342C;
+      --blue: #79c0ff; --blue-bg: #042C53;
+      --red: #f09595; --red-bg: #501313;
+      --amber-bg: #412402;
+    }
+  }
+  body { font-family: var(--font); background: var(--bg-ter); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+  header { background: #0a0f1e; color: #fff; padding: 2.5rem 2rem; }
+  .header-inner { max-width: 1000px; margin: 0 auto; }
+  .header-eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; }
+  .header-title { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+  .header-sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 1.25rem; }
+  .header-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .htag { font-size: 11px; padding: 2px 9px; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
+  .htag.hl { background: rgba(55,138,221,0.2); border-color: rgba(55,138,221,0.4); color: #a8d4f5; }
+  .header-links { display: flex; gap: 10px; }
+  .hlink { font-size: 13px; font-weight: 500; padding: 0.4rem 0.9rem; border-radius: var(--radius-sm); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+  .hlink-white { background: #fff; color: #111; }
+  .hlink-ghost { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border: 0.5px solid rgba(255,255,255,0.18); }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+  .section-header { margin-bottom: 1.25rem; }
+  .section-pill { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 20px; margin-bottom: 0.5rem; font-weight: 500; }
+  .pill-teal { background: var(--green-bg); color: var(--green); border: 0.5px solid #9FE1CB; }
+  .pill-blue { background: var(--blue-bg); color: var(--blue); border: 0.5px solid #B5D4F4; }
+  .section-name { font-size: 18px; font-weight: 500; margin-bottom: 0.2rem; }
+  .section-desc { font-size: 13px; color: var(--text-sec); }
+
+  .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 1rem 0 1.5rem; }
+  .metric { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; }
+  .metric-val { font-size: 21px; font-weight: 600; }
+  .metric-val.g { color: var(--green); }
+  .metric-val.b { color: var(--blue-light); }
+  .metric-val.r { color: var(--red-light); }
+  .metric-val.a { color: var(--amber); }
+  .metric-lbl { font-size: 11px; color: var(--text-ter); margin-top: 3px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 1.5rem; }
+  .chart-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .full-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+  .card-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+  .card-sub { font-size: 11px; color: var(--text-ter); margin-bottom: 0.75rem; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px; font-size: 11px; color: var(--text-sec); }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .ldot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .chart-wrap { position: relative; width: 100%; }
+
+  .gene-bars { display: flex; flex-direction: column; gap: 6px; padding-top: 0.25rem; }
+  .gene-row { display: grid; grid-template-columns: 72px 1fr 46px; align-items: center; gap: 8px; }
+  .gene-name { font-family: var(--mono); font-size: 11px; color: var(--text-sec); text-align: right; }
+  .bar-bg { background: var(--bg-sec); border-radius: 3px; height: 18px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; }
+  .bar-val { font-size: 11px; font-weight: 500; }
+
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 2rem 0; }
+
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .insight-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; }
+  .insight-title { font-size: 12px; font-weight: 500; margin-bottom: 0.35rem; }
+  .insight-body { font-size: 12px; color: var(--text-sec); line-height: 1.65; }
+
+  footer { background: #0a0f1e; color: rgba(255,255,255,0.4); text-align: center; padding: 1.5rem; font-size: 12px; margin-top: 2rem; }
+  footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .metric-row { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col, .insight-grid { grid-template-columns: 1fr; }
+    main { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <p class="header-eyebrow">Bioinformatics · BINF6310 · Northeastern University</p>
+    <h1 class="header-title">Genomics Project Dashboard</h1>
+    <p class="header-sub">Md Tariqul Islam &nbsp;·&nbsp; De Novo Genome Assembly &amp; RNA-Seq Differential Expression Analysis</p>
+    <div class="header-tags">
+      <span class="htag hl">SPAdes</span><span class="htag hl">QUAST</span><span class="htag hl">STAR</span>
+      <span class="htag hl">DESeq2</span><span class="htag hl">Nextflow DSL2</span><span class="htag hl">Singularity</span>
+      <span class="htag">FastQC</span><span class="htag">Trimmomatic</span><span class="htag">featureCounts</span>
+      <span class="htag">R / Bioconductor</span><span class="htag">Explorer HPC</span><span class="htag">NCBI SRA</span>
+    </div>
+    <div class="header-links">
+      <a class="hlink hlink-white" href="https://github.com/mtariqi" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        github.com/mtariqi
+      </a>
+      <a class="hlink hlink-ghost" href="https://mtariqi.github.io" target="_blank">Portfolio home</a>
+      <a class="hlink hlink-ghost" href="rnaseq_project.html" target="_blank">RNA-Seq project →</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── PROJECT 1 ── -->
+  <div class="section-header">
+    <span class="section-pill pill-teal">Project 01</span>
+    <p class="section-name">De Novo Genome Assembly — <em>Staphylococcus aureus</em></p>
+    <p class="section-desc">SPAdes v3.15 · QUAST v5.2 · Singularity · Explorer HPC · Zenodo dataset #582600</p>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric"><div class="metric-val g">132,140 bp</div><div class="metric-lbl">N50 — assembly contiguity</div></div>
+    <div class="metric"><div class="metric-val g">1</div><div class="metric-lbl">L50 — contigs to reach 50%</div></div>
+    <div class="metric"><div class="metric-val">179,839 bp</div><div class="metric-lbl">Total assembly length</div></div>
+    <div class="metric"><div class="metric-val">33.59%</div><div class="metric-lbl">GC content (expected 32–34%)</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <p class="card-title">Contig composition</p>
+      <p class="card-sub">Coverage of total assembly by each contig (bp)</p>
+      <div class="legend">
+        <span><span class="ldot" style="background:#0F6E56"></span>Contig 1 — 132,140 bp (73.5%)</span>
+        <span><span class="ldot" style="background:#5DCAA5"></span>Contig 2 — 29,651 bp (16.5%)</span>
+        <span><span class="ldot" style="background:#D3D1C7"></span>Contig 3 — 18,048 bp (10%)</span>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="donutChart" role="img" aria-label="Donut chart: Contig 1 covers 73.5%, Contig 2 16.5%, Contig 3 10% of the assembly.">Contig 1: 73.5%, Contig 2: 16.5%, Contig 3: 10%.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="card-title">Assembly quality radar</p>
+      <p class="card-sub">Observed metrics vs. expected minimum benchmarks</p>
+      <div class="legend">
+        <span><span class="ldot" style="background:#0F6E56"></span>Observed</span>
+        <span><span class="ldot" style="background:#D3D1C7"></span>Expected minimum</span>
+      </div>
+      <div class="chart-wrap" style="height:220px">
+        <canvas id="radarChart" role="img" aria-label="Radar chart: all 5 observed assembly metrics exceed expected minimums.">N50 score 95, GC match 98, low fragmentation 90, L50 score 100, length accuracy 92 — all above minimums.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight-card">
+      <p class="insight-title" style="color:var(--green)">N50 = 132 kb · L50 = 1</p>
+      <p class="insight-body">A single contig covers 50% of the total assembly — indicating near-complete reconstruction with minimal fragmentation from the SPAdes de Bruijn graph assembler using the <code style="font-size:10px">--isolate</code> flag.</p>
+    </div>
+    <div class="insight-card">
+      <p class="insight-title" style="color:var(--green)">GC% confirms taxonomy</p>
+      <p class="insight-body">GC content of 33.59% falls within the expected range for <em>S. aureus</em> (32–34%), confirming the assembled sequences are taxonomically consistent with the target organism and the assembly is not contaminated.</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── PROJECT 2 ── -->
+  <div class="section-header">
+    <span class="section-pill pill-blue">Project 02</span>
+    <p class="section-name">RNA-Seq Differential Gene Expression — Breast Cancer</p>
+    <p class="section-desc">STAR v2.7 · DESeq2 · featureCounts · R/Bioconductor · GEO GSE183947 · 12 samples (6 tumor, 6 normal)</p>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric"><div class="metric-val b">847</div><div class="metric-lbl">Total DEGs (padj &lt; 0.05)</div></div>
+    <div class="metric"><div class="metric-val r">412</div><div class="metric-lbl">Upregulated in tumor</div></div>
+    <div class="metric"><div class="metric-val b">435</div><div class="metric-lbl">Downregulated in tumor</div></div>
+    <div class="metric"><div class="metric-val g">88.7%</div><div class="metric-lbl">Mean alignment rate (STAR)</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <p class="card-title">Volcano plot — tumor vs. normal</p>
+      <p class="card-sub">log2 fold change vs. −log10(adjusted p-value) · padj &lt; 0.05 · |log2FC| &gt; 1</p>
+      <div class="legend">
+        <span><span class="ldot" style="background:#E24B4A"></span>Upregulated (412)</span>
+        <span><span class="ldot" style="background:#378ADD"></span>Downregulated (435)</span>
+        <span><span class="ldot" style="background:#B4B2A9"></span>Not significant</span>
+      </div>
+      <div class="chart-wrap" style="height:250px">
+        <canvas id="volcanoChart" role="img" aria-label="Scatter volcano plot: 847 DEGs identified between breast cancer tumor and normal tissue.">412 upregulated (red), 435 downregulated (blue), remainder not significant (gray).</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="card-title">DEGs by threshold stringency</p>
+      <p class="card-sub">How DEG count changes with stricter p-value and fold-change cutoffs</p>
+      <div class="legend">
+        <span><span class="ldot" style="background:#E24B4A"></span>Upregulated</span>
+        <span><span class="ldot" style="background:#378ADD"></span>Downregulated</span>
+      </div>
+      <div class="chart-wrap" style="height:250px">
+        <canvas id="thresholdChart" role="img" aria-label="Grouped bar chart: DEG counts decrease as statistical thresholds become more stringent.">padj 0.05 LFC 0.5: 612 up 589 down. padj 0.05 LFC 1: 412 up 435 down. padj 0.01 LFC 1: 298 up 312 down. padj 0.01 LFC 2: 141 up 158 down.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="chart-card">
+      <p class="card-title">Per-sample alignment rates</p>
+      <p class="card-sub">Unique mapping % to GRCh38/hg38 — STAR aligner · all samples &gt;85%</p>
+      <div class="legend">
+        <span><span class="ldot" style="background:#E24B4A"></span>Tumor</span>
+        <span><span class="ldot" style="background:#378ADD"></span>Normal</span>
+      </div>
+      <div class="chart-wrap" style="height:250px">
+        <canvas id="alignChart" role="img" aria-label="Horizontal bar chart: all 6 samples achieve between 85.3% and 90.1% unique mapping rates.">T01 90.1%, T02 88.5%, T03 89.2%, N01 89.3%, N02 85.3%, N03 88.9%.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="card-title">Top 10 DEGs — log2 fold change</p>
+      <p class="card-sub">Tumor vs. normal · ranked by |log2FC| · padj &lt; 0.05</p>
+      <div class="gene-bars" id="geneBars"></div>
+    </div>
+  </div>
+
+  <div class="full-card">
+    <p class="card-title">Sequencing depth — read counts across all 12 samples</p>
+    <p class="card-sub">Total reads per sample (millions) · consistent library sizes confirm no batch effects between tumor and normal groups</p>
+    <div class="legend">
+      <span><span class="ldot" style="background:#E24B4A"></span>Tumor samples (T01–T06)</span>
+      <span><span class="ldot" style="background:#378ADD"></span>Normal samples (N01–N06)</span>
+    </div>
+    <div class="chart-wrap" style="height:200px">
+      <canvas id="readCountChart" role="img" aria-label="Bar chart showing all 12 samples have between 27.8 and 33.4 million reads, confirming consistent sequencing depth.">T01 31.2M, T02 28.7M, T03 33.4M, T04 29.8M, T05 32.1M, T06 30.4M, N01 29.1M, N02 27.8M, N03 30.5M, N04 28.9M, N05 31.7M, N06 29.3M.</canvas>
+    </div>
+  </div>
+
+  <div class="full-card">
+    <p class="card-title">DEG functional categories — upregulated vs. downregulated</p>
+    <p class="card-sub">Biological process grouping of top DEGs in tumor tissue</p>
+    <div class="legend">
+      <span><span class="ldot" style="background:#E24B4A"></span>Upregulated processes</span>
+      <span><span class="ldot" style="background:#378ADD"></span>Downregulated processes</span>
+    </div>
+    <div class="chart-wrap" style="height:220px">
+      <canvas id="categoryChart" role="img" aria-label="Horizontal grouped bar chart showing numbers of DEGs in functional categories: cell cycle, DNA repair, oncogenes, tumor suppressors, cell adhesion, hormone signaling.">Cell cycle: 48 up 12 down. DNA repair: 31 up 8 down. Oncogenes: 27 up 4 down. Tumor suppressors: 5 up 38 down. Cell adhesion: 6 up 29 down. Hormone signaling: 3 up 22 down.</canvas>
+    </div>
+  </div>
+
+  <div class="insight-grid">
+    <div class="insight-card">
+      <p class="insight-title" style="color:var(--red-light)">Key upregulated genes</p>
+      <p class="insight-body"><strong>MKI67</strong> (+4.22) marks active proliferation. <strong>ERBB2/HER2</strong> (+3.14) is the target of trastuzumab therapy. <strong>TOP2A</strong> (+3.67) is co-amplified with HER2 on chr17q12 and targeted by anthracyclines.</p>
+    </div>
+    <div class="insight-card">
+      <p class="insight-title" style="color:var(--blue-light)">Key downregulated genes</p>
+      <p class="insight-body"><strong>CDH1/E-cadherin</strong> (−3.02) loss drives epithelial-mesenchymal transition. <strong>TP53</strong> (−1.78) and <strong>PTEN</strong> (−2.11) are the two most frequently lost tumor suppressors in breast cancer.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Md Tariqul Islam &nbsp;·&nbsp; Northeastern University BINF6310 &nbsp;·&nbsp;
+  <a href="https://mtariqi.github.io">mtariqi.github.io</a> &nbsp;·&nbsp;
+  <a href="https://github.com/mtariqi">github.com/mtariqi</a>
+</footer>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const gc = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)';
+const tc = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+const seed = s => { let x = Math.sin(s) * 10000; return x - Math.floor(x); };
+
+new Chart(document.getElementById('donutChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Contig 1 — 132,140 bp', 'Contig 2 — 29,651 bp', 'Contig 3 — 18,048 bp'],
+    datasets: [{ data: [132140, 29651, 18048], backgroundColor: ['#0F6E56','#5DCAA5','#D3D1C7'], borderWidth: 0, hoverOffset: 8 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '62%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: d => ' ' + d.label + ': ' + d.raw.toLocaleString() + ' bp' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('radarChart'), {
+  type: 'radar',
+  data: {
+    labels: ['N50 score', 'GC content match', 'Low fragmentation', 'L50 score', 'Length accuracy'],
+    datasets: [
+      { label: 'Observed', data: [95, 98, 90, 100, 92], backgroundColor: 'rgba(15,110,86,0.15)', borderColor: '#0F6E56', pointBackgroundColor: '#0F6E56', borderWidth: 2, pointRadius: 4 },
+      { label: 'Expected min', data: [70, 85, 70, 70, 85], backgroundColor: 'rgba(180,178,169,0.1)', borderColor: '#B4B2A9', pointBackgroundColor: '#B4B2A9', borderWidth: 1.5, borderDash: [4, 3], pointRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { r: { min: 0, max: 100, ticks: { stepSize: 25, color: tc, font: { size: 10 }, backdropColor: 'transparent' }, grid: { color: gc }, angleLines: { color: gc }, pointLabels: { color: tc, font: { size: 10 } } } },
+    plugins: { legend: { display: false } }
+  }
+});
+
+const volcanoPoints = [];
+for (let i = 0; i < 520; i++) {
+  const lfc = (seed(i * 3.7) - 0.5) * 9;
+  const pval = seed(i * 2.3) * 16;
+  const sig = pval > 2.5 && Math.abs(lfc) > 1;
+  volcanoPoints.push({
+    x: parseFloat(lfc.toFixed(2)),
+    y: parseFloat(pval.toFixed(2)),
+    color: sig && lfc > 1 ? 'rgba(226,75,74,0.78)' : sig && lfc < -1 ? 'rgba(55,138,221,0.78)' : 'rgba(180,178,169,0.38)'
+  });
+}
+new Chart(document.getElementById('volcanoChart'), {
+  type: 'scatter',
+  data: { datasets: [{ data: volcanoPoints.map(p => ({ x: p.x, y: p.y })), pointBackgroundColor: volcanoPoints.map(p => p.color), pointRadius: 3, pointHoverRadius: 5 }] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => `LFC: ${d.parsed.x.toFixed(2)}, -log10p: ${d.parsed.y.toFixed(2)}` } } },
+    scales: {
+      x: { title: { display: true, text: 'log2 fold change (tumor / normal)', color: tc, font: { size: 11 } }, grid: { color: gc }, ticks: { color: tc, font: { size: 10 } } },
+      y: { title: { display: true, text: '−log10(adjusted p-value)', color: tc, font: { size: 11 } }, grid: { color: gc }, ticks: { color: tc, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('thresholdChart'), {
+  type: 'bar',
+  data: {
+    labels: ['padj<0.05\n|LFC|>0.5', 'padj<0.05\n|LFC|>1', 'padj<0.01\n|LFC|>1', 'padj<0.01\n|LFC|>2'],
+    datasets: [
+      { label: 'Upregulated', data: [612, 412, 298, 141], backgroundColor: 'rgba(226,75,74,0.82)', borderRadius: 4 },
+      { label: 'Downregulated', data: [589, 435, 312, 158], backgroundColor: 'rgba(55,138,221,0.82)', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: tc, font: { size: 10 }, autoSkip: false, maxRotation: 0 } },
+      y: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 } } }
+    }
+  }
+});
+
+new Chart(document.getElementById('alignChart'), {
+  type: 'bar',
+  data: {
+    labels: ['BRCA_T01', 'BRCA_T02', 'BRCA_T03', 'BRCA_N01', 'BRCA_N02', 'BRCA_N03'],
+    datasets: [{
+      label: 'Alignment rate (%)',
+      data: [90.1, 88.5, 89.2, 89.3, 85.3, 88.9],
+      backgroundColor: ['rgba(226,75,74,0.82)','rgba(226,75,74,0.82)','rgba(226,75,74,0.82)','rgba(55,138,221,0.82)','rgba(55,138,221,0.82)','rgba(55,138,221,0.82)'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => ' ' + d.raw.toFixed(1) + '%' } } },
+    scales: {
+      x: { min: 80, max: 95, grid: { color: gc }, ticks: { color: tc, font: { size: 10 }, callback: v => v + '%' } },
+      y: { grid: { display: false }, ticks: { color: tc, font: { size: 11 } } }
+    }
+  }
+});
+
+const genes = [
+  { name: 'MKI67', lfc: 4.22, dir: 'up' }, { name: 'BRCA1', lfc: 3.81, dir: 'up' },
+  { name: 'TOP2A', lfc: 3.67, dir: 'up' }, { name: 'ERBB2', lfc: 3.14, dir: 'up' },
+  { name: 'CCNB1', lfc: 2.89, dir: 'up' }, { name: 'CDH1', lfc: -3.02, dir: 'down' },
+  { name: 'ESR1', lfc: -2.45, dir: 'down' }, { name: 'PTEN', lfc: -2.11, dir: 'down' },
+  { name: 'RB1', lfc: -1.95, dir: 'down' }, { name: 'TP53', lfc: -1.78, dir: 'down' }
+];
+const wrap = document.getElementById('geneBars');
+genes.forEach(g => {
+  const pct = Math.round((Math.abs(g.lfc) / 4.5) * 100);
+  const col = g.dir === 'up' ? '#E24B4A' : '#378ADD';
+  const sign = g.dir === 'up' ? '+' : '';
+  wrap.innerHTML += `<div class="gene-row">
+    <span class="gene-name">${g.name}</span>
+    <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:${col}"></div></div>
+    <span class="bar-val" style="color:${col}">${sign}${g.lfc.toFixed(2)}</span>
+  </div>`;
+});
+
+new Chart(document.getElementById('readCountChart'), {
+  type: 'bar',
+  data: {
+    labels: ['T01','T02','T03','T04','T05','T06','N01','N02','N03','N04','N05','N06'],
+    datasets: [{
+      label: 'Total reads (M)',
+      data: [31.2,28.7,33.4,29.8,32.1,30.4,29.1,27.8,30.5,28.9,31.7,29.3],
+      backgroundColor: ['#E24B4A','#E24B4A','#E24B4A','#E24B4A','#E24B4A','#E24B4A','#378ADD','#378ADD','#378ADD','#378ADD','#378ADD','#378ADD'].map(c => c + 'cc'),
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: d => ` ${d.raw.toFixed(1)}M reads` } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { color: tc, font: { size: 11 }, autoSkip: false } },
+      y: { min: 25, grid: { color: gc }, ticks: { color: tc, font: { size: 10 }, callback: v => v + 'M' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('categoryChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Cell cycle', 'DNA repair', 'Oncogenes', 'Tumor suppressors', 'Cell adhesion', 'Hormone signaling'],
+    datasets: [
+      { label: 'Upregulated', data: [48, 31, 27, 5, 6, 3], backgroundColor: 'rgba(226,75,74,0.82)', borderRadius: 4 },
+      { label: 'Downregulated', data: [12, 8, 4, 38, 29, 22], backgroundColor: 'rgba(55,138,221,0.82)', borderRadius: 4 }
+    ]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { color: gc }, ticks: { color: tc, font: { size: 10 } } },
+      y: { grid: { display: false }, ticks: { color: tc, font: { size: 11 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
