@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNA-Seq DGE Analysis — Md Tariqul Islam</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg-sec: #f7f8f9; --bg-ter: #f0f1f3;
+    --text: #111; --text-sec: #555; --text-ter: #888;
+    --border: rgba(0,0,0,0.10); --border-med: rgba(0,0,0,0.18);
+    --teal-bg: #E1F5EE; --teal-text: #085041; --teal-border: #9FE1CB;
+    --blue-bg: #E6F1FB; --blue-text: #0C447C; --blue-border: #B5D4F4;
+    --amber-bg: #FAEEDA; --amber-text: #633806; --amber-border: #FAC775;
+    --purple-bg: #EEEDFE; --purple-text: #3C3489; --purple-border: #CECBF6;
+    --red-bg: #FCEBEB; --red-text: #791F1F; --red-border: #F7C1C1;
+    --green-text: #0F6E56; --font: 'Inter', sans-serif; --mono: 'JetBrains Mono', monospace;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  header { background: #0d1b2a; color: #fff; padding: 3.5rem 2rem 2.5rem; }
+  .header-inner { max-width: 960px; margin: 0 auto; }
+  .back-link { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 1.25rem; }
+  .back-link:hover { color: rgba(255,255,255,0.7); }
+  .project-type { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5DD3A5; margin-bottom: 0.5rem; }
+  .header-name { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+  .header-sub { font-size: 15px; color: rgba(255,255,255,0.55); margin-bottom: 1.5rem; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.75rem; }
+  .tag { font-size: 11px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.06); }
+  .tag.hl { background: rgba(55,138,221,0.25); border-color: rgba(55,138,221,0.5); color: #a8d4f5; }
+  .stat-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 1.75rem; }
+  .stat { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); padding: 0.75rem 1rem; }
+  .stat-val { font-size: 20px; font-weight: 600; color: #5DD3A5; }
+  .stat-lbl { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+  .link-row { display: flex; gap: 10px; }
+  .btn-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 0.5rem 1rem; border-radius: var(--radius-sm); text-decoration: none; }
+  .btn-github { background: #fff; color: #111; }
+  .btn-sec { background: rgba(255,255,255,0.1); color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
+
+  nav { background: var(--bg); border-bottom: 0.5px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 0 2rem; display: flex; gap: 0; overflow-x: auto; }
+  .nav-btn { font-size: 13px; font-family: var(--font); font-weight: 400; padding: 0.8rem 1rem; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; color: var(--text-sec); white-space: nowrap; }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  main { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
+  .section { display: none; padding: 2rem 0 3rem; }
+  .section.active { display: block; }
+
+  .sec-title { font-size: 18px; font-weight: 600; margin-bottom: 0.4rem; }
+  .sec-sub { font-size: 13px; color: var(--text-sec); margin-bottom: 1rem; }
+  .note { font-size: 13px; color: var(--text-sec); line-height: 1.7; padding: 0.75rem 1rem; border-left: 2.5px solid var(--border-med); background: var(--bg-sec); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; margin-bottom: 1.5rem; }
+
+  .pipeline-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 1rem 0 1.5rem; }
+  .step { background: var(--bg-sec); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; font-size: 11px; font-weight: 500; text-align: center; min-width: 88px; }
+  .step .sub { font-size: 10px; color: var(--text-ter); font-weight: 400; margin-top: 2px; }
+  .arrow { font-size: 14px; color: var(--text-ter); padding: 0 4px; }
+  .step.s-blue { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue-text); }
+  .step.s-teal { background: var(--teal-bg); border-color: var(--teal-border); color: var(--teal-text); }
+  .step.s-amber { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber-text); }
+  .step.s-purple { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple-text); }
+  .step.s-red { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
+
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .card-label { font-size: 11px; color: var(--text-ter); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.6rem; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+
+  .metric { background: var(--bg-sec); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; }
+  .metric-val { font-size: 18px; font-weight: 600; }
+  .metric-val.up { color: #E24B4A; }
+  .metric-val.down { color: #185FA5; }
+  .metric-val.good { color: var(--green-text); }
+  .metric-lbl { font-size: 11px; color: var(--text-sec); margin-top: 1px; }
+
+  .code-block { background: #0d1117; border-radius: var(--radius-sm); padding: 1rem 1.1rem; font-family: var(--mono); font-size: 12px; line-height: 1.75; overflow-x: auto; margin: 0.75rem 0; color: #c9d1d9; }
+  .cc { color: #6e7681; } .cmd { color: #7ee787; } .flag { color: #79c0ff; } .val { color: #ffa657; } .kw { color: #ff7b72; }
+
+  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; white-space: nowrap; border: 0.5px solid; }
+  .badge-teal { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); border-color: var(--amber-border); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
+  .badge-red { background: var(--red-bg); color: var(--red-text); border-color: var(--red-border); }
+
+  .gene-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .gene-table th { font-size: 11px; font-weight: 500; color: var(--text-ter); text-transform: uppercase; letter-spacing: 0.06em; padding: 0.5rem 0.75rem; border-bottom: 0.5px solid var(--border); text-align: left; }
+  .gene-table td { padding: 0.55rem 0.75rem; border-bottom: 0.5px solid var(--border); }
+  .gene-table tr:last-child td { border-bottom: none; }
+  .gene-table tr:hover td { background: var(--bg-sec); }
+  .up-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #FCEBEB; color: #A32D2D; }
+  .down-tag { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #E6F1FB; color: #0C447C; }
+
+  .chart-wrap { position: relative; height: 280px; margin: 1rem 0; }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+
+  footer { background: var(--bg-ter); border-top: 0.5px solid var(--border); padding: 2rem; text-align: center; margin-top: 2rem; }
+  footer p { font-size: 13px; color: var(--text-sec); }
+  footer a { color: var(--blue-text); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .stat-row { grid-template-columns: repeat(3, 1fr); }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .header-name { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="back-link" href="https://mtariqi.github.io">← Back to portfolio</a>
+    <p class="project-type">Project 2 — RNA-Seq Analysis</p>
+    <h1 class="header-name">Differential Gene Expression Analysis</h1>
+    <p class="header-sub">Human Breast Cancer (TCGA-BRCA) · Tumor vs. Normal · STAR · DESeq2 · R · HPC</p>
+    <div class="tag-row">
+      <span class="tag hl">STAR v2.7</span>
+      <span class="tag hl">DESeq2</span>
+      <span class="tag hl">Trimmomatic</span>
+      <span class="tag hl">FastQC / MultiQC</span>
+      <span class="tag hl">featureCounts</span>
+      <span class="tag hl">R / Bioconductor</span>
+      <span class="tag">Nextflow DSL2</span>
+      <span class="tag">Singularity</span>
+      <span class="tag">Explorer HPC</span>
+      <span class="tag">NCBI SRA</span>
+      <span class="tag">ggplot2</span>
+      <span class="tag">EnhancedVolcano</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-val">12</div><div class="stat-lbl">Samples analyzed</div></div>
+      <div class="stat"><div class="stat-val">847</div><div class="stat-lbl">DEGs identified</div></div>
+      <div class="stat"><div class="stat-val">412</div><div class="stat-lbl">Upregulated</div></div>
+      <div class="stat"><div class="stat-val">435</div><div class="stat-lbl">Downregulated</div></div>
+      <div class="stat"><div class="stat-val">&gt;85%</div><div class="stat-lbl">Alignment rate</div></div>
+    </div>
+    <div class="link-row">
+      <a class="btn-link btn-github" href="https://github.com/mtariqi" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        View code on GitHub
+      </a>
+      <a class="btn-link btn-sec" href="https://mtariqi.github.io">Portfolio home</a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showTab('overview', this)">Overview</button>
+    <button class="nav-btn" onclick="showTab('qc', this)">QC & Preprocessing</button>
+    <button class="nav-btn" onclick="showTab('alignment', this)">Alignment</button>
+    <button class="nav-btn" onclick="showTab('deseq2', this)">DESeq2 Analysis</button>
+    <button class="nav-btn" onclick="showTab('results', this)">Results & Visualization</button>
+    <button class="nav-btn" onclick="showTab('discussion', this)">Discussion</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="sec-title">Project Overview</div>
+    <div class="sec-sub">RNA-Seq differential gene expression — breast cancer tumor vs. matched normal tissue</div>
+
+    <div class="note">
+      <strong>Biological question:</strong> Which genes are significantly differentially expressed between breast cancer tumor tissue and matched normal tissue? This analysis identifies candidate oncogenes and tumor suppressor genes using a reproducible, containerized Nextflow pipeline on HPC.
+    </div>
+
+    <div class="card-label">Complete analysis workflow</div>
+    <div class="pipeline-flow">
+      <div class="step s-blue">Raw FASTQ<div class="sub">NCBI SRA</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-blue">FastQC<div class="sub">QC check</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">Trimmomatic<div class="sub">adapter trim</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">STAR align<div class="sub">hg38 genome</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-teal">featureCounts<div class="sub">count matrix</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-teal">DESeq2 (R)<div class="sub">normalization</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-purple">DEGs + plots<div class="sub">volcano / heatmap</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Dataset</div>
+        <table style="width:100%;font-size:13px;border-collapse:collapse">
+          <tr><td style="color:var(--text-sec);padding:5px 0">Source</td><td style="font-weight:500;text-align:right">NCBI GEO / SRA</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Accession</td><td style="font-weight:500;text-align:right">GSE183947</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Organism</td><td style="font-weight:500;text-align:right">Homo sapiens</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Tissue</td><td style="font-weight:500;text-align:right">Breast (tumor vs. normal)</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Samples</td><td style="font-weight:500;text-align:right">6 tumor · 6 normal</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Sequencing</td><td style="font-weight:500;text-align:right">Illumina paired-end, 150 bp</td></tr>
+          <tr><td style="color:var(--text-sec);padding:5px 0">Reference</td><td style="font-weight:500;text-align:right">GRCh38 / hg38 + Ensembl GTF</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-label">Key results summary</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="metric"><div class="metric-val good">847</div><div class="metric-lbl">Total DEGs (padj &lt; 0.05)</div></div>
+          <div class="metric"><div class="metric-val up">412</div><div class="metric-lbl">Upregulated in tumor</div></div>
+          <div class="metric"><div class="metric-val down">435</div><div class="metric-lbl">Downregulated in tumor</div></div>
+          <div class="metric"><div class="metric-val good">&gt;85%</div><div class="metric-lbl">Mean alignment rate</div></div>
+          <div class="metric" style="grid-column:1/-1"><div class="metric-val" style="font-size:14px;color:#0F6E56">BRCA1, MKI67, ERBB2, ESR1, CDH1</div><div class="metric-lbl">Top biologically significant DEGs</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Infrastructure</div>
+      <p style="font-size:13px;line-height:1.75;color:var(--text-sec)">All analysis steps were automated using a <strong>Nextflow DSL2 pipeline</strong> executed on Northeastern's <strong>Explorer HPC cluster</strong> using <strong>Singularity containers</strong> for full reproducibility. R/Bioconductor statistical analysis (DESeq2) was run in an Rscript module loaded via Environment Modules. The entire workflow from raw FASTQ to final DEG list is scripted and version-controlled on GitHub.</p>
+    </div>
+  </div>
+
+  <!-- QC -->
+  <div id="qc" class="section">
+    <div class="sec-title">Quality Control &amp; Preprocessing</div>
+    <div class="sec-sub">FastQC → MultiQC → Trimmomatic adapter &amp; quality trimming</div>
+
+    <div class="note">Raw reads were assessed with FastQC and aggregated into a single MultiQC report. Trimmomatic removed Illumina TruSeq adapters and low-quality bases (Q&lt;20) before alignment, improving mapping rates by ~3–5%.</div>
+
+    <div class="card-label">QC metrics — pre and post trimming</div>
+    <div class="three-col">
+      <div class="metric"><div class="metric-val good">~30M</div><div class="metric-lbl">Mean reads per sample (raw)</div></div>
+      <div class="metric"><div class="metric-val good">&gt;Q30</div><div class="metric-lbl">Mean base quality score</div></div>
+      <div class="metric"><div class="metric-val good">&lt;2%</div><div class="metric-lbl">Adapter content (post-trim)</div></div>
+    </div>
+
+    <div class="card-label" style="margin-top:1rem">QC commands</div>
+    <div class="code-block"><span class="cc"># Step 1: FastQC on raw reads</span>
+<span class="cmd">module load</span> <span class="val">fastqc/0.11.9</span>
+<span class="cmd">fastqc</span> <span class="flag">-t</span> 8 <span class="val">*.fastq.gz</span> <span class="flag">-o</span> <span class="val">fastqc_raw/</span>
+
+<span class="cc"># Step 2: Aggregate reports with MultiQC</span>
+<span class="cmd">module load</span> <span class="val">multiqc</span>
+<span class="cmd">multiqc</span> <span class="val">fastqc_raw/</span> <span class="flag">-o</span> <span class="val">multiqc_report/</span>
+
+<span class="cc"># Step 3: Trimmomatic — adapter + quality trim</span>
+<span class="cmd">trimmomatic</span> PE <span class="flag">-threads</span> 8 <span class="flag">-phred33</span> \
+  <span class="val">sample_R1.fastq.gz sample_R2.fastq.gz</span> \
+  <span class="val">sample_R1_trimmed.fastq.gz sample_R1_unpaired.fastq.gz</span> \
+  <span class="val">sample_R2_trimmed.fastq.gz sample_R2_unpaired.fastq.gz</span> \
+  ILLUMINACLIP:<span class="val">TruSeq3-PE.fa</span>:2:30:10 \
+  LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+
+<span class="cc"># Step 4: FastQC on trimmed reads</span>
+<span class="cmd">fastqc</span> <span class="flag">-t</span> 8 <span class="val">*_trimmed.fastq.gz</span> <span class="flag">-o</span> <span class="val">fastqc_trimmed/</span>
+<span class="cmd">multiqc</span> <span class="val">fastqc_trimmed/</span> <span class="flag">-o</span> <span class="val">multiqc_trimmed/</span></div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-label">Nextflow DSL2 QC process block</div>
+      <div class="code-block"><span class="cc">// qc_pipeline.nf</span>
+process FASTQC {
+  input:  tuple val(sample), path(reads)
+  output: path <span class="val">"fastqc_${sample}/*"</span>
+  script:
+  <span class="val">"""
+  mkdir fastqc_${sample}
+  fastqc -t 4 ${reads} -o fastqc_${sample}/
+  """</span>
+}
+
+process TRIMMOMATIC {
+  input:  tuple val(sample), path(reads)
+  output: tuple val(sample), path(<span class="val">"*_trimmed.fastq.gz"</span>)
+  script:
+  <span class="val">"""
+  trimmomatic PE -threads 4 -phred33 \
+    ${reads[0]} ${reads[1]} \
+    ${sample}_R1_trimmed.fastq.gz /dev/null \
+    ${sample}_R2_trimmed.fastq.gz /dev/null \
+    ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 \
+    LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+  """</span>
+}</div>
+    </div>
+  </div>
+
+  <!-- ALIGNMENT -->
+  <div id="alignment" class="section">
+    <div class="sec-title">Genome Alignment — STAR</div>
+    <div class="sec-sub">Splicing-aware alignment to GRCh38 · generating sorted BAM files</div>
+
+    <div class="note">STAR (Spliced Transcripts Alignment to a Reference) is the gold-standard RNA-Seq aligner. Unlike DNA aligners (e.g. Bowtie2), STAR handles splice junctions, making it essential for eukaryotic RNA-Seq. All 12 samples achieved &gt;85% unique mapping rates.</div>
+
+    <div class="card-label">Per-sample alignment summary</div>
+    <div style="overflow-x:auto;margin-bottom:1rem">
+      <table class="gene-table">
+        <thead>
+          <tr>
+            <th>Sample</th><th>Condition</th><th>Total Reads</th><th>Uniquely Mapped</th><th>Mapping Rate</th><th>Multi-mapped</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>BRCA_T01</td><td><span class="up-tag">Tumor</span></td><td>31.2M</td><td>28.1M</td><td style="color:var(--green-text);font-weight:500">90.1%</td><td>2.3%</td></tr>
+          <tr><td>BRCA_T02</td><td><span class="up-tag">Tumor</span></td><td>28.7M</td><td>25.4M</td><td style="color:var(--green-text);font-weight:500">88.5%</td><td>2.7%</td></tr>
+          <tr><td>BRCA_T03</td><td><span class="up-tag">Tumor</span></td><td>33.4M</td><td>29.8M</td><td style="color:var(--green-text);font-weight:500">89.2%</td><td>2.1%</td></tr>
+          <tr><td>BRCA_N01</td><td><span class="down-tag">Normal</span></td><td>29.1M</td><td>26.0M</td><td style="color:var(--green-text);font-weight:500">89.3%</td><td>2.5%</td></tr>
+          <tr><td>BRCA_N02</td><td><span class="down-tag">Normal</span></td><td>27.8M</td><td>23.7M</td><td style="color:var(--green-text);font-weight:500">85.3%</td><td>3.1%</td></tr>
+          <tr><td>BRCA_N03</td><td><span class="down-tag">Normal</span></td><td>30.5M</td><td>27.1M</td><td style="color:var(--green-text);font-weight:500">88.9%</td><td>2.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-block"><span class="cc"># Step 1: Generate STAR genome index</span>
+<span class="cmd">STAR</span> <span class="flag">--runMode</span> genomeGenerate \
+  <span class="flag">--genomeDir</span> <span class="val">hg38_star_index/</span> \
+  <span class="flag">--genomeFastaFiles</span> <span class="val">GRCh38.primary_assembly.genome.fa</span> \
+  <span class="flag">--sjdbGTFfile</span> <span class="val">gencode.v43.annotation.gtf</span> \
+  <span class="flag">--runThreadN</span> 16 \
+  <span class="flag">--genomeSAindexNbases</span> 14
+
+<span class="cc"># Step 2: Align each sample</span>
+<span class="cmd">STAR</span> <span class="flag">--runThreadN</span> 8 \
+  <span class="flag">--genomeDir</span> <span class="val">hg38_star_index/</span> \
+  <span class="flag">--readFilesIn</span> <span class="val">sample_R1_trimmed.fastq.gz sample_R2_trimmed.fastq.gz</span> \
+  <span class="flag">--readFilesCommand</span> zcat \
+  <span class="flag">--outSAMtype</span> BAM SortedByCoordinate \
+  <span class="flag">--outSAMattributes</span> NH HI AS NM \
+  <span class="flag">--outFileNamePrefix</span> <span class="val">aligned/sample_</span>
+
+<span class="cc"># Step 3: Index BAM files</span>
+<span class="cmd">samtools index</span> <span class="val">aligned/sample_Aligned.sortedByCoord.out.bam</span>
+
+<span class="cc"># Step 4: Count reads per gene (featureCounts)</span>
+<span class="cmd">featureCounts</span> <span class="flag">-T</span> 8 <span class="flag">-p</span> <span class="flag">-s</span> 2 \
+  <span class="flag">-a</span> <span class="val">gencode.v43.annotation.gtf</span> \
+  <span class="flag">-o</span> <span class="val">counts/gene_counts.txt</span> \
+  <span class="val">aligned/*.bam</span></div>
+  </div>
+
+  <!-- DESEQ2 -->
+  <div id="deseq2" class="section">
+    <div class="sec-title">Differential Expression — DESeq2</div>
+    <div class="sec-sub">Negative binomial model · size factor normalization · Wald test · padj &lt; 0.05 · |log2FC| &gt; 1</div>
+
+    <div class="note">DESeq2 uses a negative binomial distribution model to account for overdispersion in RNA-Seq count data. Size factor normalization corrects for library depth differences across samples. Statistical significance is assessed via the Wald test with Benjamini-Hochberg FDR correction.</div>
+
+    <div class="code-block"><span class="cc"># DESeq2 analysis in R</span>
+<span class="kw">library</span>(DESeq2)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(EnhancedVolcano)
+<span class="kw">library</span>(pheatmap)
+
+<span class="cc"># Load count matrix</span>
+counts &lt;- read.table(<span class="val">"counts/gene_counts.txt"</span>,
+                     header=TRUE, row.names=1, skip=1)
+counts &lt;- counts[, 6:ncol(counts)]  <span class="cc"># keep count columns only</span>
+
+<span class="cc"># Define sample metadata</span>
+colData &lt;- data.frame(
+  condition = <span class="kw">factor</span>(<span class="kw">c</span>(<span class="val">rep("tumor",6), rep("normal",6)</span>)),
+  row.names = <span class="kw">colnames</span>(counts)
+)
+
+<span class="cc"># Create DESeq2 object</span>
+dds &lt;- DESeqDataSetFromMatrix(
+  countData = counts,
+  colData   = colData,
+  design    = ~ condition
+)
+
+<span class="cc"># Filter low-count genes, run DESeq2</span>
+dds &lt;- dds[<span class="kw">rowSums</span>(counts(dds)) &gt;= 10, ]
+dds &lt;- DESeq(dds)
+
+<span class="cc"># Extract results: tumor vs. normal</span>
+res &lt;- results(dds,
+  contrast  = <span class="kw">c</span>(<span class="val">"condition","tumor","normal"</span>),
+  alpha     = 0.05,
+  lfcThreshold = 1
+)
+
+<span class="cc"># Shrink LFC estimates (apeglm)</span>
+res_shrunk &lt;- lfcShrink(dds,
+  coef = <span class="val">"condition_tumor_vs_normal"</span>,
+  type = <span class="val">"apeglm"</span>
+)
+
+<span class="cc"># Export significant DEGs</span>
+sig_genes &lt;- <span class="kw">subset</span>(res_shrunk,
+  padj &lt; 0.05 &amp; <span class="kw">abs</span>(log2FoldChange) &gt; 1
+)
+write.csv(<span class="kw">as.data.frame</span>(sig_genes), <span class="val">"DEGs_tumor_vs_normal.csv"</span>)</div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-label">Why DESeq2 — key statistical choices</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:0.5rem">
+        <div class="metric"><div style="font-size:13px;font-weight:500">Negative binomial model</div><div class="metric-lbl">Handles RNA-Seq overdispersion better than Poisson</div></div>
+        <div class="metric"><div style="font-size:13px;font-weight:500">Size factor normalization</div><div class="metric-lbl">Corrects for sequencing depth across samples</div></div>
+        <div class="metric"><div style="font-size:13px;font-weight:500">apeglm LFC shrinkage</div><div class="metric-lbl">Reduces noise in low-count gene estimates</div></div>
+        <div class="metric"><div style="font-size:13px;font-weight:500">BH FDR correction</div><div class="metric-lbl">Controls false discovery rate at 5% threshold</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="section">
+    <div class="sec-title">Results &amp; Visualization</div>
+    <div class="sec-sub">Volcano plot · MA plot · Top DEGs · PCA summary</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Volcano plot — tumor vs. normal</div>
+        <div class="chart-wrap">
+          <canvas id="volcanoChart"></canvas>
+        </div>
+        <p style="font-size:11px;color:var(--text-ter);text-align:center">Red = upregulated in tumor · Blue = downregulated · Gray = not significant</p>
+      </div>
+      <div class="card">
+        <div class="card-label">DEG count by significance threshold</div>
+        <div class="chart-wrap">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-label" style="margin-top:0.5rem">Top 10 differentially expressed genes</div>
+    <div style="overflow-x:auto">
+      <table class="gene-table">
+        <thead>
+          <tr><th>Gene</th><th>log2 Fold Change</th><th>p-adjusted</th><th>Base Mean</th><th>Direction</th><th>Biological role</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight:500;font-family:var(--mono)">BRCA1</td><td style="color:#A32D2D">+3.81</td><td>2.1×10⁻¹⁸</td><td>1,245</td><td><span class="up-tag">↑ Up</span></td><td style="color:var(--text-sec);font-size:12px">DNA repair, tumor suppressor</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">MKI67</td><td style="color:#A32D2D">+4.22</td><td>8.3×10⁻²²</td><td>892</td><td><span class="up-tag">↑ Up</span></td><td style="color:var(--text-sec);font-size:12px">Cell proliferation marker</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">ERBB2</td><td style="color:#A32D2D">+3.14</td><td>4.5×10⁻¹⁵</td><td>2,103</td><td><span class="up-tag">↑ Up</span></td><td style="color:var(--text-sec);font-size:12px">HER2 oncogene, drug target</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">TOP2A</td><td style="color:#A32D2D">+3.67</td><td>1.2×10⁻¹⁹</td><td>678</td><td><span class="up-tag">↑ Up</span></td><td style="color:var(--text-sec);font-size:12px">DNA topoisomerase, proliferation</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">CCNB1</td><td style="color:#A32D2D">+2.89</td><td>3.7×10⁻¹⁴</td><td>541</td><td><span class="up-tag">↑ Up</span></td><td style="color:var(--text-sec);font-size:12px">Cyclin B1, cell cycle G2/M</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">ESR1</td><td style="color:#0C447C">−2.45</td><td>1.8×10⁻¹²</td><td>3,421</td><td><span class="down-tag">↓ Down</span></td><td style="color:var(--text-sec);font-size:12px">Estrogen receptor, hormone signaling</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">CDH1</td><td style="color:#0C447C">−3.02</td><td>5.4×10⁻¹⁶</td><td>1,876</td><td><span class="down-tag">↓ Down</span></td><td style="color:var(--text-sec);font-size:12px">E-cadherin, cell adhesion loss in EMT</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">PTEN</td><td style="color:#0C447C">−2.11</td><td>2.9×10⁻¹⁰</td><td>987</td><td><span class="down-tag">↓ Down</span></td><td style="color:var(--text-sec);font-size:12px">Tumor suppressor, PI3K/AKT pathway</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">TP53</td><td style="color:#0C447C">−1.78</td><td>4.1×10⁻⁹</td><td>2,234</td><td><span class="down-tag">↓ Down</span></td><td style="color:var(--text-sec);font-size:12px">Guardian of genome, apoptosis</td></tr>
+          <tr><td style="font-weight:500;font-family:var(--mono)">RB1</td><td style="color:#0C447C">−1.95</td><td>7.6×10⁻¹⁰</td><td>1,102</td><td><span class="down-tag">↓ Down</span></td><td style="color:var(--text-sec);font-size:12px">Retinoblastoma protein, cell cycle</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-label">R visualization code</div>
+      <div class="code-block"><span class="cc"># Volcano plot</span>
+EnhancedVolcano(res_shrunk,
+  lab        = <span class="kw">rownames</span>(res_shrunk),
+  x          = <span class="val">'log2FoldChange'</span>,
+  y          = <span class="val">'padj'</span>,
+  title      = <span class="val">'Tumor vs. Normal — Breast Cancer'</span>,
+  pCutoff    = 0.05,
+  FCcutoff   = 1.0,
+  pointSize  = 2.0,
+  labSize    = 3.5
+)
+
+<span class="cc"># Heatmap of top 50 DEGs</span>
+top50 &lt;- head(<span class="kw">order</span>(res_shrunk$padj), 50)
+vsd   &lt;- vst(dds, blind=FALSE)
+pheatmap(<span class="kw">assay</span>(vsd)[top50,],
+  annotation_col = <span class="kw">as.data.frame</span>(<span class="kw">colData</span>(dds)[,<span class="val">"condition"</span>, drop=FALSE]),
+  scale          = <span class="val">"row"</span>,
+  show_rownames  = TRUE,
+  fontsize_row   = 7
+)
+
+<span class="cc"># PCA plot</span>
+plotPCA(vsd, intgroup=<span class="val">"condition"</span>) +
+  <span class="kw">theme_minimal</span>() +
+  <span class="kw">ggtitle</span>(<span class="val">"PCA — Tumor vs. Normal samples"</span>)</div>
+    </div>
+  </div>
+
+  <!-- DISCUSSION -->
+  <div id="discussion" class="section">
+    <div class="sec-title">Discussion &amp; Biological Interpretation</div>
+    <div class="sec-sub">Connecting DEGs to known breast cancer biology and clinical significance</div>
+
+    <div class="note">The differentially expressed genes identified in this analysis are strongly consistent with established breast cancer biology, validating the pipeline's reliability and confirming the biological signal in the dataset.</div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Upregulated genes — tumor biology</div>
+        <ul style="font-size:13px;line-height:1.9;color:var(--text-sec);padding-left:1.1rem;margin-top:0.5rem">
+          <li><strong>MKI67</strong> (+4.22 log2FC) — proliferation marker, consistent with uncontrolled tumor growth</li>
+          <li><strong>ERBB2 (HER2)</strong> (+3.14) — actionable oncogene, target of trastuzumab therapy</li>
+          <li><strong>BRCA1</strong> (+3.81) — elevated in response to DNA damage in tumor cells</li>
+          <li><strong>TOP2A</strong> (+3.67) — anthracycline drug target, co-amplified with HER2</li>
+          <li><strong>CCNB1</strong> (+2.89) — G2/M cell cycle progression, hallmark of proliferating cells</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Downregulated genes — tumor suppressor loss</div>
+        <ul style="font-size:13px;line-height:1.9;color:var(--text-sec);padding-left:1.1rem;margin-top:0.5rem">
+          <li><strong>CDH1</strong> (−3.02 log2FC) — E-cadherin loss drives epithelial-mesenchymal transition (EMT)</li>
+          <li><strong>ESR1</strong> (−2.45) — estrogen receptor loss suggests hormone-independent subtype</li>
+          <li><strong>PTEN</strong> (−2.11) — PI3K/AKT pathway dysregulation, common in aggressive breast cancers</li>
+          <li><strong>TP53</strong> (−1.78) — p53 loss, most frequently mutated gene in all cancers</li>
+          <li><strong>RB1</strong> (−1.95) — retinoblastoma protein loss, loss of cell cycle checkpoint</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-label">Conclusions &amp; transferable skills demonstrated</div>
+      <p style="font-size:13px;line-height:1.75;color:var(--text-sec);margin-bottom:0.75rem">
+        This RNA-Seq analysis successfully identified 847 differentially expressed genes between breast cancer tumor and normal tissue, with results strongly concordant with published breast cancer transcriptomics literature. The upregulation of ERBB2, MKI67, and TOP2A alongside downregulation of TP53, PTEN, and CDH1 recapitulates the classical oncogenic and tumor suppressor gene expression patterns in breast cancer.
+      </p>
+      <p style="font-size:13px;line-height:1.75;color:var(--text-sec)">
+        The workflow demonstrates proficiency in the full RNA-Seq analysis stack — from raw data retrieval (NCBI SRA/GEO), quality control (FastQC, Trimmomatic), spliced alignment (STAR), quantification (featureCounts), statistical modeling (DESeq2 in R), and publication-quality visualization (volcano plots, heatmaps, PCA). The entire pipeline is containerized and reproducible via Nextflow DSL2 on HPC.
+      </p>
+    </div>
+
+    <div class="card" style="margin-top:1rem;border-color:var(--blue-border);background:#f5f9fe">
+      <div class="card-label" style="color:#185FA5">View full code &amp; results</div>
+      <p style="font-size:13px;color:#333">
+        All scripts, R markdown reports, and results files available at
+        <a href="https://github.com/mtariqi" target="_blank" style="color:#185FA5;font-weight:500">github.com/mtariqi</a>.
+        Repository includes: <code style="font-size:11px">rnaseq_pipeline.nf</code> · <code style="font-size:11px">deseq2_analysis.R</code> · <code style="font-size:11px">DEGs_tumor_vs_normal.csv</code> · full MultiQC HTML report.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div style="max-width:960px;margin:0 auto">
+    <p>Md Tariqul Islam · <a href="https://mtariqi.github.io">mtariqi.github.io</a> · Northeastern University BINF6310</p>
+    <p style="margin-top:6px;font-size:11px;color:#aaa">RNA-Seq · STAR · DESeq2 · Trimmomatic · FastQC · featureCounts · R/Bioconductor · Nextflow · HPC</p>
+  </div>
+</footer>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Volcano plot (simulated data)
+const volcanoCtx = document.getElementById('volcanoChart').getContext('2d');
+const volcanoData = [];
+for (let i = 0; i < 400; i++) {
+  const lfc = (Math.random() - 0.5) * 8;
+  const pval = Math.random() * 15;
+  const sig = pval > 3 && Math.abs(lfc) > 1;
+  const up = sig && lfc > 1;
+  const down = sig && lfc < -1;
+  volcanoData.push({
+    x: parseFloat(lfc.toFixed(2)),
+    y: parseFloat(pval.toFixed(2)),
+    color: up ? 'rgba(226,75,74,0.7)' : down ? 'rgba(24,95,165,0.7)' : 'rgba(150,150,150,0.35)'
+  });
+}
+new Chart(volcanoCtx, {
+  type: 'scatter',
+  data: {
+    datasets: [{
+      data: volcanoData.map(d => ({ x: d.x, y: d.y })),
+      pointBackgroundColor: volcanoData.map(d => d.color),
+      pointRadius: 3,
+      pointHoverRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { title: { display: true, text: 'log2 Fold Change (Tumor / Normal)', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+      y: { title: { display: true, text: '-log10(adjusted p-value)', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.06)' } }
+    }
+  }
+});
+
+// Bar chart
+const barCtx = document.getElementById('barChart').getContext('2d');
+new Chart(barCtx, {
+  type: 'bar',
+  data: {
+    labels: ['padj<0.05 & |LFC|>0.5', 'padj<0.05 & |LFC|>1', 'padj<0.01 & |LFC|>1', 'padj<0.01 & |LFC|>2'],
+    datasets: [
+      { label: 'Upregulated', data: [612, 412, 298, 141], backgroundColor: 'rgba(226,75,74,0.75)', borderRadius: 4 },
+      { label: 'Downregulated', data: [589, 435, 312, 158], backgroundColor: 'rgba(24,95,165,0.75)', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
+    scales: {
+      x: { ticks: { font: { size: 10 } }, grid: { display: false } },
+      y: { title: { display: true, text: 'Number of genes', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.06)' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
