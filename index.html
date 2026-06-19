@@ -271,11 +271,69 @@
   footer p { font-size: 13px; color: var(--text-sec); }
   footer a { color: var(--blue-text); text-decoration: none; }
 
+  /* ── PROJECTS SHOWCASE ── */
+  .projects-section {
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 2rem 0;
+  }
+  .projects-inner { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+  .projects-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-ter);
+    margin-bottom: 1rem;
+  }
+  .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .proj-card {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .proj-card:hover {
+    border-color: var(--border-med);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+  .proj-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .proj-card.card-teal::before { background: linear-gradient(90deg, #0F6E56, #5DD3A5); }
+  .proj-card.card-blue::before { background: linear-gradient(90deg, #0C447C, #4BA3F5); }
+  .proj-card-num { font-size: 11px; color: var(--text-ter); margin-bottom: 0.5rem; }
+  .proj-card-title { font-size: 16px; font-weight: 600; margin-bottom: 0.35rem; }
+  .proj-card-sub { font-size: 12px; color: var(--text-sec); margin-bottom: 1rem; line-height: 1.5; }
+  .proj-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1rem; }
+  .proj-card-tag { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 0.5px solid var(--border); color: var(--text-sec); background: var(--bg-sec); }
+  .proj-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; }
+  .proj-card-stat { background: var(--bg-sec); border-radius: var(--radius-sm); padding: 0.4rem 0.5rem; text-align: center; }
+  .proj-card-stat-val { font-size: 14px; font-weight: 600; }
+  .proj-card-stat-lbl { font-size: 9px; color: var(--text-ter); margin-top: 1px; }
+  .proj-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--blue-text);
+  }
+
   @media (max-width: 640px) {
     .stat-row { grid-template-columns: 1fr 1fr; }
     .two-col, .hpc-grid, .db-row { grid-template-columns: 1fr; }
     .header-name { font-size: 26px; }
     .pipeline-flow { gap: 4px; }
+    .projects-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -313,12 +371,12 @@
         <div class="stat-lbl">L50 contigs</div>
       </div>
       <div class="stat">
-        <div class="stat-val">33.6%</div>
-        <div class="stat-lbl">GC content</div>
+        <div class="stat-val">847</div>
+        <div class="stat-lbl">DEGs identified</div>
       </div>
       <div class="stat">
-        <div class="stat-val">4+</div>
-        <div class="stat-lbl">Completed projects</div>
+        <div class="stat-val">2</div>
+        <div class="stat-lbl">Major projects</div>
       </div>
     </div>
 
@@ -333,6 +391,75 @@
     </div>
   </div>
 </header>
+
+<!-- ── PROJECTS SHOWCASE ── -->
+<section class="projects-section">
+  <div class="projects-inner">
+    <p class="projects-eyebrow">Featured Projects</p>
+    <div class="projects-grid">
+
+      <!-- Project 1 -->
+      <a class="proj-card card-teal" href="#assembly" onclick="document.querySelectorAll('.nav-btn')[0].click(); return false;">
+        <div class="proj-card-num">Project 01</div>
+        <div class="proj-card-title">De Novo Genome Assembly</div>
+        <div class="proj-card-sub">S. aureus mutant strain reconstructed from Illumina paired-end reads using SPAdes on Northeastern's Explorer HPC cluster</div>
+        <div class="proj-card-tags">
+          <span class="proj-card-tag">SPAdes</span>
+          <span class="proj-card-tag">QUAST</span>
+          <span class="proj-card-tag">Singularity</span>
+          <span class="proj-card-tag">HPC</span>
+          <span class="proj-card-tag">Linux/Bash</span>
+        </div>
+        <div class="proj-card-stats">
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0F6E56">132 kb</div>
+            <div class="proj-card-stat-lbl">N50</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0F6E56">1</div>
+            <div class="proj-card-stat-lbl">L50</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val">33.6%</div>
+            <div class="proj-card-stat-lbl">GC content</div>
+          </div>
+        </div>
+        <span class="proj-card-link">View details →</span>
+      </a>
+
+      <!-- Project 2 -->
+      <a class="proj-card card-blue" href="rnaseq_project.html">
+        <div class="proj-card-num">Project 02</div>
+        <div class="proj-card-title">RNA-Seq Differential Gene Expression</div>
+        <div class="proj-card-sub">Breast cancer tumor vs. normal tissue — STAR alignment, DESeq2 statistical modeling, volcano plots and heatmaps in R</div>
+        <div class="proj-card-tags">
+          <span class="proj-card-tag">STAR</span>
+          <span class="proj-card-tag">DESeq2</span>
+          <span class="proj-card-tag">Trimmomatic</span>
+          <span class="proj-card-tag">featureCounts</span>
+          <span class="proj-card-tag">R / Bioconductor</span>
+          <span class="proj-card-tag">Nextflow</span>
+        </div>
+        <div class="proj-card-stats">
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0C447C">847</div>
+            <div class="proj-card-stat-lbl">DEGs found</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#A32D2D">412</div>
+            <div class="proj-card-stat-lbl">Upregulated</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0F6E56">&gt;85%</div>
+            <div class="proj-card-stat-lbl">Alignment rate</div>
+          </div>
+        </div>
+        <span class="proj-card-link">View full project →</span>
+      </a>
+
+    </div>
+  </div>
+</section>
 
 <nav>
   <div class="nav-inner">
