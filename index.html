@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Md Tariqul Islam — Bioinformatics Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-sec: #f7f8f9;
+    --bg-ter: #f0f1f3;
+    --text: #111;
+    --text-sec: #555;
+    --text-ter: #888;
+    --border: rgba(0,0,0,0.10);
+    --border-med: rgba(0,0,0,0.18);
+    --teal-bg: #E1F5EE;
+    --teal-text: #085041;
+    --teal-border: #9FE1CB;
+    --blue-bg: #E6F1FB;
+    --blue-text: #0C447C;
+    --blue-border: #B5D4F4;
+    --amber-bg: #FAEEDA;
+    --amber-text: #633806;
+    --amber-border: #FAC775;
+    --purple-bg: #EEEDFE;
+    --purple-text: #3C3489;
+    --purple-border: #CECBF6;
+    --green-text: #0F6E56;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #0a0f1e;
+    color: #fff;
+    padding: 3.5rem 2rem 2.5rem;
+  }
+  .header-inner { max-width: 900px; margin: 0 auto; }
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 0.75rem;
+  }
+  .header-name {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.35rem;
+  }
+  .header-title {
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 1.5rem;
+  }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 1.75rem; }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 0.5px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.65);
+    background: rgba(255,255,255,0.06);
+  }
+  .tag.hl { background: rgba(55,138,221,0.25); border-color: rgba(55,138,221,0.5); color: #a8d4f5; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.75rem; }
+  .stat {
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+  }
+  .stat-val { font-size: 22px; font-weight: 600; color: #5DD3A5; }
+  .stat-lbl { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 2px; }
+
+  .link-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+  .btn-link:hover { opacity: 0.8; }
+  .btn-github { background: #fff; color: #111; }
+  .btn-neu { background: rgba(255,255,255,0.1); color: #fff; border: 0.5px solid rgba(255,255,255,0.2); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0;
+  }
+  .nav-btn {
+    font-size: 13px;
+    font-family: var(--font);
+    font-weight: 400;
+    padding: 0.8rem 1.1rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    color: var(--text-sec);
+    transition: color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  /* ── MAIN ── */
+  main { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+  .section { display: none; padding: 2rem 0 3rem; }
+  .section.active { display: block; }
+
+  .proj-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .proj-title { font-size: 20px; font-weight: 600; }
+  .proj-sub { font-size: 13px; color: var(--text-sec); margin-top: 4px; }
+
+  .badge {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 0.5px solid;
+  }
+  .badge-teal { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-border); }
+  .badge-blue { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue-border); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); border-color: var(--amber-border); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
+
+  .note {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.7;
+    padding: 0.75rem 1rem;
+    border-left: 2.5px solid var(--border-med);
+    background: var(--bg-sec);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Pipeline flow */
+  .pipeline-flow { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 1rem 0 1.5rem; }
+  .step {
+    background: var(--bg-sec);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 92px;
+  }
+  .step .sub { font-size: 10px; color: var(--text-ter); font-weight: 400; margin-top: 2px; }
+  .arrow { font-size: 14px; color: var(--text-ter); padding: 0 5px; }
+  .step.s-blue { background: var(--blue-bg); border-color: var(--blue-border); color: var(--blue-text); }
+  .step.s-teal { background: var(--teal-bg); border-color: var(--teal-border); color: var(--teal-text); }
+  .step.s-amber { background: var(--amber-bg); border-color: var(--amber-border); color: var(--amber-text); }
+  .step.s-purple { background: var(--purple-bg); border-color: var(--purple-border); color: var(--purple-text); }
+
+  /* Cards */
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.25rem;
+  }
+  .card-label {
+    font-size: 11px;
+    color: var(--text-ter);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.6rem;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .metric {
+    background: var(--bg-sec);
+    border-radius: var(--radius-sm);
+    padding: 0.6rem 0.75rem;
+  }
+  .metric-val { font-size: 18px; font-weight: 600; }
+  .metric-val.good { color: var(--green-text); }
+  .metric-lbl { font-size: 11px; color: var(--text-sec); margin-top: 1px; }
+
+  /* Code */
+  .code-block {
+    background: #0d1117;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.1rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.75;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    color: #c9d1d9;
+  }
+  .cc { color: #6e7681; }
+  .cmd { color: #7ee787; }
+  .flag { color: #79c0ff; }
+  .val { color: #ffa657; }
+
+  /* Skills grid */
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin: 1rem 0; }
+  .skill-item {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    text-align: center;
+  }
+  .skill-name { font-size: 12px; font-weight: 500; margin-top: 4px; }
+  .skill-cat { font-size: 10px; color: var(--text-ter); }
+
+  /* DB cards */
+  .db-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 1rem 0; }
+  .db-card {
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+  .db-name { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .db-desc { font-size: 12px; color: var(--text-sec); line-height: 1.5; }
+
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.5rem 0; }
+
+  .hpc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+
+  /* Footer */
+  footer {
+    background: var(--bg-ter);
+    border-top: 0.5px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+  }
+  footer .inner { max-width: 900px; margin: 0 auto; }
+  footer p { font-size: 13px; color: var(--text-sec); }
+  footer a { color: var(--blue-text); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .two-col, .hpc-grid, .db-row { grid-template-columns: 1fr; }
+    .header-name { font-size: 26px; }
+    .pipeline-flow { gap: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <p class="header-eyebrow">Bioinformatics Portfolio &nbsp;·&nbsp; Northeastern University &nbsp;·&nbsp; BINF6310</p>
+    <h1 class="header-name">Md Tariqul Islam</h1>
+    <p class="header-title">Computational Genomics &nbsp;·&nbsp; NGS Pipeline Development &nbsp;·&nbsp; HPC &amp; Containerized Workflows</p>
+
+    <div class="tag-row">
+      <span class="tag hl">SPAdes</span>
+      <span class="tag hl">QUAST</span>
+      <span class="tag hl">Nextflow DSL2</span>
+      <span class="tag hl">Bowtie2</span>
+      <span class="tag hl">Singularity</span>
+      <span class="tag hl">Explorer HPC</span>
+      <span class="tag">FastQC</span>
+      <span class="tag">Cutadapt</span>
+      <span class="tag">Samtools</span>
+      <span class="tag">Bcftools</span>
+      <span class="tag">Linux / Bash</span>
+      <span class="tag">NCBI / SRA</span>
+      <span class="tag">Zenodo</span>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-val">132 kb</div>
+        <div class="stat-lbl">Assembly N50</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">1</div>
+        <div class="stat-lbl">L50 contigs</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">33.6%</div>
+        <div class="stat-lbl">GC content</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">4+</div>
+        <div class="stat-lbl">Completed projects</div>
+      </div>
+    </div>
+
+    <div class="link-row">
+      <a class="btn-link btn-github" href="https://github.com/mtariqi" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        github.com/mtariqi
+      </a>
+      <a class="btn-link btn-neu" href="https://www.khoury.northeastern.edu" target="_blank">
+        Northeastern University · BINF6310
+      </a>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showTab('assembly', this)">🧬 Genome Assembly</button>
+    <button class="nav-btn" onclick="showTab('pipeline', this)">⚙️ Nextflow Pipelines</button>
+    <button class="nav-btn" onclick="showTab('hpc', this)">🖥️ HPC &amp; Containers</button>
+    <button class="nav-btn" onclick="showTab('databases', this)">🗄️ Public Databases</button>
+    <button class="nav-btn" onclick="showTab('skills', this)">📋 Skills Summary</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── GENOME ASSEMBLY ── -->
+  <div id="assembly" class="section active">
+    <div class="proj-header">
+      <div>
+        <div class="proj-title">De Novo Genome Assembly &amp; Quality Assessment</div>
+        <div class="proj-sub">Staphylococcus aureus mutant strain — Illumina paired-end reads · November 2025</div>
+      </div>
+      <span class="badge badge-teal">High-Quality Assembly</span>
+    </div>
+
+    <div class="note">
+      <strong>Objective:</strong> Reconstruct the complete genome of an imaginary <em>S. aureus</em> mutant strain from raw Illumina paired-end reads using SPAdes, then benchmark assembly quality with QUAST — all executed inside a Singularity container on Northeastern's Explorer HPC cluster.
+    </div>
+
+    <div class="card-label">Workflow</div>
+    <div class="pipeline-flow">
+      <div class="step">HPC setup<div class="sub">Explorer cluster</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-blue">Download reads<div class="sub">Zenodo #582600</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">SPAdes assembly<div class="sub">--isolate flag</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-teal">QUAST QC<div class="sub">metrics eval</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-purple">Interpret<div class="sub">N50, GC%, L50</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Assembly metrics — QUAST output</div>
+        <div class="metric-grid">
+          <div class="metric">
+            <div class="metric-val good">179,839 bp</div>
+            <div class="metric-lbl">Total assembly length</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val good">132,140 bp</div>
+            <div class="metric-lbl">N50 — high contiguity</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val good">1</div>
+            <div class="metric-lbl">L50 (single contig)</div>
+          </div>
+          <div class="metric">
+            <div class="metric-val good">2</div>
+            <div class="metric-lbl">L90 contigs</div>
+          </div>
+          <div class="metric" style="grid-column:1/-1">
+            <div class="metric-val">33.59%</div>
+            <div class="metric-lbl">GC% — matches S. aureus expected range (32–34%)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Commands used</div>
+        <div class="code-block"><span class="cc"># SPAdes inside Singularity</span>
+<span class="cmd">singularity exec</span> spades.sif \
+  spades.py <span class="flag">--isolate</span> \
+  <span class="flag">-1</span> <span class="val">mutant_R1.fastq.gz</span> \
+  <span class="flag">-2</span> <span class="val">mutant_R2.fastq.gz</span> \
+  <span class="flag">-o</span> <span class="val">assembly_output/</span>
+
+<span class="cc"># QUAST quality assessment</span>
+<span class="cmd">quast.py</span> contigs.fasta \
+  <span class="flag">-o</span> <span class="val">quast_results/</span></div>
+        <p style="font-size:11px;color:#888;margin-top:6px">Tools: SPAdes v3.15 · QUAST v5.2 · Singularity · Explorer HPC</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Interpretation &amp; significance</div>
+      <p style="font-size:13px;line-height:1.75;color:#555">
+        An N50 of 132 kb with an L50 of 1 indicates a near-complete, minimally fragmented assembly — one contig covers 50% of the entire genome, demonstrating excellent SPAdes performance on these reads. GC content of 33.6% confirms taxonomic fidelity with known <em>S. aureus</em> references. The containerized workflow ensures full reproducibility, and the approach scales directly to clinical microbial genomics, antimicrobial resistance (AMR) surveillance, and novel organism de novo reference construction.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── NEXTFLOW PIPELINES ── -->
+  <div id="pipeline" class="section">
+    <div class="proj-header">
+      <div>
+        <div class="proj-title">Nextflow Bioinformatics Pipelines</div>
+        <div class="proj-sub">Reproducible, scalable NGS workflows — FASTQ preprocessing &amp; sequence alignment</div>
+      </div>
+      <span class="badge badge-blue">2 Production Pipelines</span>
+    </div>
+
+    <div class="note">
+      Nextflow DSL2 is the industry standard for scalable bioinformatics (used by nf-core and Seqera Platform). These pipelines demonstrate end-to-end read processing from raw FASTQ through quality trimming and reference alignment — core skills in any NGS-focused role.
+    </div>
+
+    <div class="card-label">Pipeline 1 — FASTQ quality trimming (cutadapt)</div>
+    <div class="pipeline-flow">
+      <div class="step s-blue">Input FASTQ<div class="sub">Channel.fromPath</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">cutadapt -q 20<div class="sub">quality trim</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-teal">trimmed FASTQ<div class="sub">filtered output</div></div>
+    </div>
+    <div class="code-block"><span class="cc">// fastq_processing.nf — Nextflow DSL2</span>
+nextflow.enable.dsl = 2
+
+channel fastqFiles = Channel.fromPath(<span class="val">'./*.fastq'</span>)
+
+process trimAndFilter {
+  input:  path fastq
+  output: path <span class="val">"trimmed_${fastq.baseName}.fastq"</span>
+  script:
+  <span class="val">"""
+  cutadapt -q 20 -o trimmed_${fastq.baseName}.fastq ${fastq}
+  """</span>
+}
+
+workflow { fastqFiles | trimAndFilter }
+
+<span class="cc"># Run the pipeline</span>
+<span class="cmd">nextflow run</span> fastq_processing.nf <span class="flag">-profile</span> <span class="val">standard</span></div>
+
+    <hr class="divider">
+
+    <div class="card-label">Pipeline 2 — Bowtie2 sequence alignment → SAM/BAM</div>
+    <div class="pipeline-flow">
+      <div class="step s-blue">FASTQ reads<div class="sub">short reads input</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">bowtie2-build<div class="sub">index reference</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-amber">bowtie2 align<div class="sub">-x ref -U reads</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-teal">SAM output<div class="sub">alignment.sam</div></div>
+      <div class="arrow">→</div>
+      <div class="step s-purple">Analysis<div class="sub">samtools flagstat</div></div>
+    </div>
+    <div class="code-block"><span class="cc">// alignment.nf — Nextflow DSL2 + Bowtie2</span>
+nextflow.enable.dsl = 2
+
+params.reference_index = <span class="val">'/path/to/reference_index'</span>
+
+process align {
+  input:  path fastq
+  output: path <span class="val">"alignment.sam"</span>
+  script:
+  <span class="val">"""
+  bowtie2 -x ${params.reference_index} \
+          -U ${fastq} -S alignment.sam
+  """</span>
+}
+
+workflow {
+  Channel.fromPath(<span class="val">'./*.fastq'</span>) | align
+}
+
+<span class="cc"># Index reference genome first</span>
+<span class="cmd">bowtie2-build</span> <span class="val">reference.fa</span> <span class="val">reference_index</span>
+
+<span class="cc"># Run alignment pipeline</span>
+<span class="cmd">nextflow run</span> alignment.nf <span class="flag">-profile</span> <span class="val">standard</span></div>
+
+    <div class="card" style="margin-top:1rem">
+      <div class="card-label">Why this stands out</div>
+      <p style="font-size:13px;line-height:1.75;color:#555">These pipelines follow nf-core conventions — modular processes, explicit input/output channels, and profile-based execution. Both pipelines are parameterized, meaning they can be pointed at any reference genome or sample dataset with a single flag change, making them immediately reusable in a production research environment.</p>
+    </div>
+  </div>
+
+  <!-- ── HPC & CONTAINERS ── -->
+  <div id="hpc" class="section">
+    <div class="proj-header">
+      <div>
+        <div class="proj-title">HPC &amp; Containerized Workflows</div>
+        <div class="proj-sub">Explorer HPC · Singularity · Environment Modules · Linux / Bash automation</div>
+      </div>
+      <span class="badge badge-purple">Production-Ready</span>
+    </div>
+
+    <div class="note">
+      Running reproducible analyses at scale is more than tool knowledge — it requires environment management, job scheduling, and container fluency. All genomics projects were executed on Northeastern's Explorer HPC cluster using Singularity containers, ensuring identical results across runs and platforms.
+    </div>
+
+    <div class="hpc-grid">
+      <div class="card">
+        <div class="card-label">HPC competencies demonstrated</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:0.5rem">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px">
+            <span style="color:#185FA5;font-size:16px">⬡</span>
+            <div><strong>SLURM scheduling</strong> — job submission, resource allocation, and queue management on shared HPC infrastructure</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px">
+            <span style="color:#185FA5;font-size:16px">⬡</span>
+            <div><strong>Linux/Bash scripting</strong> — automating multi-step genomics workflows, file management, and batch processing</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px">
+            <span style="color:#185FA5;font-size:16px">⬡</span>
+            <div><strong>Singularity containers</strong> — portable, reproducible software environments that run without root privileges</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px">
+            <span style="color:#185FA5;font-size:16px">⬡</span>
+            <div><strong>Environment Modules</strong> — versioned tool loading for reproducibility across collaborative projects</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Singularity modules loaded &amp; used</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:0.5rem">
+          <span class="badge badge-blue">FastQC</span>
+          <span class="badge badge-blue">MultiQC</span>
+          <span class="badge badge-blue">Trimmomatic</span>
+          <span class="badge badge-blue">BBDuk</span>
+          <span class="badge badge-blue">STAR v1.3</span>
+          <span class="badge badge-blue">Samtools</span>
+          <span class="badge badge-blue">Bcftools</span>
+          <span class="badge badge-blue">Kallisto</span>
+          <span class="badge badge-blue">RSEM</span>
+          <span class="badge badge-blue">SPAdes</span>
+          <span class="badge badge-blue">QUAST</span>
+          <span class="badge badge-blue">Bowtie2</span>
+        </div>
+        <p style="font-size:11px;color:#888;margin-top:0.75rem">Loaded via <code style="font-size:11px;font-family:monospace">module load</code> — fully reproducible across HPC sessions</p>
+      </div>
+    </div>
+
+    <div class="card-label" style="margin-top:1rem">Key HPC commands used in projects</div>
+    <div class="code-block"><span class="cc"># Load modules on Explorer HPC</span>
+<span class="cmd">module load</span> <span class="val">singularity</span>
+<span class="cmd">module load</span> <span class="val">fastqc/0.11.9</span>
+<span class="cmd">module list</span>  <span class="cc"># verify loaded modules</span>
+
+<span class="cc"># Run SPAdes inside Singularity (bind working dir)</span>
+<span class="cmd">singularity exec</span> <span class="flag">--bind</span> <span class="val">$PWD:/data</span> \
+  spades.sif spades.py <span class="flag">--isolate</span> \
+  <span class="flag">-1</span> <span class="val">/data/mutant_R1.fastq.gz</span> \
+  <span class="flag">-2</span> <span class="val">/data/mutant_R2.fastq.gz</span> \
+  <span class="flag">-o</span> <span class="val">/data/assembly_output/</span>
+
+<span class="cc"># FastQC quality check</span>
+<span class="cmd">fastqc</span> <span class="val">reads_R1.fastq reads_R2.fastq</span> <span class="flag">-o</span> <span class="val">qc_results/</span>
+
+<span class="cc"># SAM to BAM conversion &amp; stats</span>
+<span class="cmd">samtools view</span> <span class="flag">-bS</span> alignment.sam <span class="flag">-o</span> <span class="val">alignment.bam</span>
+<span class="cmd">samtools flagstat</span> <span class="val">alignment.bam</span></div>
+  </div>
+
+  <!-- ── PUBLIC DATABASES ── -->
+  <div id="databases" class="section">
+    <div class="proj-header">
+      <div>
+        <div class="proj-title">Public Genomics Databases &amp; Data Retrieval</div>
+        <div class="proj-sub">NCBI · GenBank · SRA · Zenodo — real biological data sourcing</div>
+      </div>
+      <span class="badge badge-amber">Data Fluency</span>
+    </div>
+
+    <div class="note">
+      Real-world bioinformatics begins with data retrieval. All projects used publicly available datasets from trusted repositories, demonstrating the ability to source, validate, and integrate genomic data for downstream analysis — a critical skill in any production genomics role.
+    </div>
+
+    <div class="db-row">
+      <div class="db-card">
+        <div class="db-name">NCBI / GenBank</div>
+        <div class="db-desc">Primary repository for nucleotide sequences and reference genomes. Used to retrieve reference sequences for alignment benchmarking.</div>
+        <span class="badge badge-blue" style="margin-top:8px;display:inline-block">Reference genomes</span>
+      </div>
+      <div class="db-card">
+        <div class="db-name">Zenodo</div>
+        <div class="db-desc">Open science repository. Downloaded paired-end Illumina reads (Record #582600) for the S. aureus genome assembly project.</div>
+        <span class="badge badge-teal" style="margin-top:8px;display:inline-block">Raw read datasets</span>
+      </div>
+      <div class="db-card">
+        <div class="db-name">NCBI SRA</div>
+        <div class="db-desc">Sequence Read Archive — large-scale NGS raw reads. Accessed via SRA-toolkit (prefetch + fastq-dump) for batch data retrieval.</div>
+        <span class="badge badge-amber" style="margin-top:8px;display:inline-block">NGS data access</span>
+      </div>
+    </div>
+
+    <div class="card-label">Data retrieval commands</div>
+    <div class="code-block"><span class="cc"># Download reads from Zenodo</span>
+<span class="cmd">wget</span> https://zenodo.org/record/582600/files/mutant_R1.fastq.gz
+<span class="cmd">wget</span> https://zenodo.org/record/582600/files/mutant_R2.fastq.gz
+
+<span class="cc"># Verify file integrity</span>
+<span class="cmd">md5sum</span> <span class="val">mutant_R1.fastq.gz</span>
+<span class="cmd">gunzip</span> <span class="flag">-c</span> <span class="val">mutant_R1.fastq.gz</span> | <span class="cmd">head</span> <span class="flag">-8</span>
+
+<span class="cc"># NCBI SRA retrieval with SRA-toolkit</span>
+<span class="cmd">prefetch</span> <span class="val">SRR12345678</span>
+<span class="cmd">fastq-dump</span> <span class="flag">--split-files</span> <span class="flag">--gzip</span> <span class="val">SRR12345678</span>
+
+<span class="cc"># Check read counts</span>
+<span class="cmd">zcat</span> <span class="val">reads_R1.fastq.gz</span> | <span class="cmd">wc</span> <span class="flag">-l</span></div>
+  </div>
+
+  <!-- ── SKILLS SUMMARY ── -->
+  <div id="skills" class="section">
+    <div class="proj-header">
+      <div>
+        <div class="proj-title">Technical Skills Summary</div>
+        <div class="proj-sub">Full stack of competencies demonstrated across BINF6310 projects</div>
+      </div>
+      <span class="badge badge-teal">Employer-Ready</span>
+    </div>
+
+    <div class="card-label">Core bioinformatics tools</div>
+    <div class="skill-grid">
+      <div class="skill-item"><div style="font-size:20px">🧬</div><div class="skill-name">SPAdes</div><div class="skill-cat">Genome assembly</div></div>
+      <div class="skill-item"><div style="font-size:20px">📊</div><div class="skill-name">QUAST</div><div class="skill-cat">Assembly QC</div></div>
+      <div class="skill-item"><div style="font-size:20px">⚙️</div><div class="skill-name">Nextflow DSL2</div><div class="skill-cat">Pipeline engine</div></div>
+      <div class="skill-item"><div style="font-size:20px">🎯</div><div class="skill-name">Bowtie2</div><div class="skill-cat">Read alignment</div></div>
+      <div class="skill-item"><div style="font-size:20px">✂️</div><div class="skill-name">Cutadapt</div><div class="skill-cat">Read trimming</div></div>
+      <div class="skill-item"><div style="font-size:20px">🔍</div><div class="skill-name">FastQC</div><div class="skill-cat">QC reporting</div></div>
+      <div class="skill-item"><div style="font-size:20px">📦</div><div class="skill-name">Samtools</div><div class="skill-cat">SAM/BAM tools</div></div>
+      <div class="skill-item"><div style="font-size:20px">🧪</div><div class="skill-name">Bcftools</div><div class="skill-cat">Variant calling</div></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card-label">Infrastructure &amp; environment</div>
+    <div class="skill-grid">
+      <div class="skill-item"><div style="font-size:20px">🖥️</div><div class="skill-name">Explorer HPC</div><div class="skill-cat">NU cluster</div></div>
+      <div class="skill-item"><div style="font-size:20px">📦</div><div class="skill-name">Singularity</div><div class="skill-cat">Containers</div></div>
+      <div class="skill-item"><div style="font-size:20px">🐧</div><div class="skill-name">Linux / Bash</div><div class="skill-cat">Shell scripting</div></div>
+      <div class="skill-item"><div style="font-size:20px">🗄️</div><div class="skill-name">NCBI / SRA</div><div class="skill-cat">Data retrieval</div></div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">What employers value here</div>
+        <ul style="font-size:13px;line-height:1.9;color:#555;padding-left:1.1rem">
+          <li>End-to-end NGS pipeline experience (raw reads → assembly → QC)</li>
+          <li>HPC fluency — running jobs at scale, not just on a laptop</li>
+          <li>Container-based reproducibility (Singularity / Docker equivalent)</li>
+          <li>Nextflow DSL2 — the nf-core standard used in pharma and research</li>
+          <li>Public data retrieval and validation from NCBI, SRA, Zenodo</li>
+          <li>Quantitative result interpretation (N50, L50, GC%, alignment rates)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Relevant roles this prepares for</div>
+        <ul style="font-size:13px;line-height:1.9;color:#555;padding-left:1.1rem">
+          <li>Bioinformatics Analyst / Scientist</li>
+          <li>Computational Genomics Researcher</li>
+          <li>NGS Pipeline Engineer</li>
+          <li>Research Data Analyst (genomics / pharma)</li>
+          <li>Genomics Software Developer</li>
+          <li>Clinical Bioinformatician (AMR, pathogen genomics)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1rem;border-color:#B5D4F4;background:#f5f9fe">
+      <div class="card-label" style="color:#185FA5">GitHub — view all project code</div>
+      <p style="font-size:13px;line-height:1.75;color:#333">
+        All Nextflow scripts, assembly workflows, and analysis code are available at
+        <a href="https://github.com/mtariqi" target="_blank" style="color:#185FA5;font-weight:500">github.com/mtariqi</a>.
+        Repositories include annotated <code>.nf</code> pipeline scripts, QUAST result files, and this portfolio page hosted via GitHub Pages.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <p>Md Tariqul Islam &nbsp;·&nbsp; Northeastern University BINF6310 &nbsp;·&nbsp; <a href="https://github.com/mtariqi">github.com/mtariqi</a></p>
+    <p style="margin-top:6px;font-size:11px;color:#aaa">Built with SPAdes · QUAST · Nextflow · Bowtie2 · Singularity · Explorer HPC</p>
+  </div>
+</footer>
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
