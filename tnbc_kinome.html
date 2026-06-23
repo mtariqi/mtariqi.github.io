@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Md Tariqul Islam — TNBC Kinome Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & tokens ─────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04080F;
+  --bg2:#090E18;
+  --bg3:#0D1525;
+  --surface:#111B2E;
+  --surface2:#172237;
+  --border:#1E2F4A;
+  --border2:#243656;
+  --text:#E8EDF5;
+  --muted:#7A8BA8;
+  --faint:#3A4F6B;
+  --blue:#378ADD;
+  --blue-dim:#1A3F6A;
+  --teal:#0DCFB4;
+  --teal-dim:#063D36;
+  --amber:#EF9F27;
+  --red:#E24B4A;
+  --green:#5DC86A;
+  --font-head:'Syne',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.7;overflow-x:hidden}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:var(--blue-dim);color:var(--text)}
+
+/* ── Canvas hero ────────────────────────────────────────────────────── */
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 5vw;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,transparent 30%,var(--bg) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:2;max-width:780px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--teal);letter-spacing:.12em;text-transform:uppercase;margin-bottom:20px}
+.hero h1{font-family:var(--font-head);font-size:clamp(42px,7vw,88px);font-weight:800;line-height:1.0;letter-spacing:-.02em;color:var(--text)}
+.hero h1 span{color:var(--teal)}
+.hero-sub{margin-top:20px;font-size:17px;color:var(--muted);max-width:560px;line-height:1.75}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:4px;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.06em;border:1px solid}
+.badge-blue{background:rgba(55,138,221,.08);border-color:rgba(55,138,221,.3);color:var(--blue)}
+.badge-teal{background:rgba(13,207,180,.08);border-color:rgba(13,207,180,.3);color:var(--teal)}
+.badge-amber{background:rgba(239,159,39,.08);border-color:rgba(239,159,39,.3);color:var(--amber)}
+.badge-red{background:rgba(226,75,74,.08);border-color:rgba(226,75,74,.3);color:var(--red)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.hero-scroll{position:absolute;bottom:36px;left:5vw;z-index:2;display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--faint);letter-spacing:.1em}
+.scroll-line{width:40px;height:1px;background:var(--faint)}
+
+/* ── Shared layout ──────────────────────────────────────────────────── */
+.section{padding:96px 5vw}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--font-mono);font-size:11px;color:var(--teal);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-family:var(--font-head);font-size:clamp(28px,4vw,42px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
+.section-sub{color:var(--muted);font-size:15px;max-width:620px;line-height:1.8;margin-bottom:56px}
+hr.rule{border:none;border-top:1px solid var(--border);margin:0}
+
+/* ── About ──────────────────────────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.about-text p{color:var(--muted);line-height:1.85;margin-bottom:16px}
+.about-text p b{color:var(--text);font-weight:500}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:20px}
+.stat-num{font-family:var(--font-head);font-size:36px;font-weight:800;color:var(--teal);line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ── Project cards ──────────────────────────────────────────────────── */
+.projects-grid{display:grid;gap:2px}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:border-color .2s}
+.proj-card:hover{border-color:var(--border2)}
+.proj-header{padding:32px 36px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.proj-header:hover .proj-toggle{color:var(--teal)}
+.proj-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
+.proj-name{font-family:var(--font-head);font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.proj-name span{color:var(--teal)}
+.proj-desc{color:var(--muted);font-size:14px;margin-top:10px;max-width:580px;line-height:1.75}
+.proj-toggle{font-size:22px;color:var(--faint);transition:transform .25s,color .2s;flex-shrink:0;margin-top:4px;font-family:var(--font-mono)}
+.proj-toggle.open{transform:rotate(45deg);color:var(--teal)}
+.proj-body{display:none;padding:0 36px 36px;border-top:1px solid var(--border)}
+.proj-body.open{display:block}
+
+/* ── Tabs inside project ────────────────────────────────────────────── */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:24px 0 28px;overflow-x:auto}
+.tab{padding:10px 18px;font-family:var(--font-mono);font-size:12px;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;letter-spacing:.06em;transition:color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.pane{display:none}
+.pane.active{display:block}
+
+/* ── Code / formula blocks ──────────────────────────────────────────── */
+.code-block{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px 24px;font-family:var(--font-mono);font-size:13px;color:#9ECBF0;overflow-x:auto;line-height:1.7}
+.code-block .kw{color:#FF7B72}.code-block .fn{color:#D2A8FF}
+.code-block .str{color:#A5D6FF}.code-block .cm{color:var(--faint)}
+.formula-block{background:var(--bg3);border:1px solid var(--border2);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:16px 20px;font-family:var(--font-mono);font-size:14px;color:var(--text);margin:16px 0}
+.formula-block .hl{color:var(--teal);font-weight:500}
+.formula-block .dim{color:var(--muted)}
+
+/* ── Module list ─────────────────────────────────────────────────────── */
+.module-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0}
+.module-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:16px 18px}
+.module-name{font-family:var(--font-mono);font-size:12px;color:var(--teal);margin-bottom:6px}
+.module-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── Rs table / pair table ─────────────────────────────────────────── */
+.data-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0}
+.data-table th{text-align:left;padding:8px 12px;color:var(--muted);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;border-bottom:1px solid var(--border);font-weight:500}
+.data-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface2)}
+.rs-pill{display:inline-block;padding:2px 8px;border-radius:3px;font-family:var(--font-mono);font-size:11px;font-weight:500}
+.rs-crit{background:rgba(226,75,74,.15);color:#F09595;border:1px solid rgba(226,75,74,.25)}
+.rs-high{background:rgba(239,159,39,.12);color:var(--amber);border:1px solid rgba(239,159,39,.2)}
+.rs-mod{background:rgba(93,200,106,.1);color:#8CE396;border:1px solid rgba(93,200,106,.18)}
+
+/* ── Pipeline flow ──────────────────────────────────────────────────── */
+.pipeline-flow{display:flex;flex-direction:column;gap:0}
+.step{display:grid;grid-template-columns:32px 1fr;gap:0 20px;position:relative}
+.step::before{content:'';position:absolute;left:15px;top:44px;bottom:-1px;width:1px;background:var(--border)}
+.step:last-child::before{display:none}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;color:var(--teal);flex-shrink:0;margin-top:6px;position:relative;z-index:1}
+.step-content{padding-bottom:28px}
+.step-title{font-weight:500;color:var(--text);margin-bottom:4px}
+.step-detail{font-size:13px;color:var(--muted);line-height:1.65}
+.step-cmd{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:3px;padding:4px 10px;font-family:var(--font-mono);font-size:11px;color:#9ECBF0;margin-top:6px}
+
+/* ── Grade grid ─────────────────────────────────────────────────────── */
+.grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.grade-card{border-radius:6px;padding:16px;border:1px solid}
+.g-crit{background:rgba(226,75,74,.06);border-color:rgba(226,75,74,.2)}
+.g-high{background:rgba(239,159,39,.06);border-color:rgba(239,159,39,.2)}
+.g-mod{background:rgba(93,200,106,.06);border-color:rgba(93,200,106,.18)}
+.g-uniq{background:rgba(122,139,168,.06);border-color:rgba(122,139,168,.2)}
+.grade-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.g-crit .grade-label{color:#F09595}
+.g-high .grade-label{color:var(--amber)}
+.g-mod .grade-label{color:#8CE396}
+.g-uniq .grade-label{color:var(--muted)}
+.grade-rs{font-family:var(--font-head);font-size:22px;font-weight:800;margin-bottom:4px}
+.grade-strat{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* ── Links row ──────────────────────────────────────────────────────── */
+.links-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.link-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:5px;font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.06em;border:1px solid;transition:background .15s,color .15s}
+.link-btn:hover{text-decoration:none}
+.link-primary{background:rgba(13,207,180,.1);border-color:rgba(13,207,180,.4);color:var(--teal)}
+.link-primary:hover{background:rgba(13,207,180,.18)}
+.link-ghost{background:transparent;border-color:var(--border2);color:var(--muted)}
+.link-ghost:hover{color:var(--text);border-color:var(--faint)}
+
+/* ── AI section ─────────────────────────────────────────────────────── */
+.ai-box{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:28px}
+.ai-formula{font-family:var(--font-mono);font-size:13px;color:var(--muted);margin:12px 0;line-height:1.8}
+.ai-formula b{color:var(--text)}
+.ai-formula em{color:var(--teal)}
+.principle-card{background:var(--surface);border-left:3px solid var(--teal);border-radius:0 6px 6px 0;padding:14px 18px;margin:12px 0;font-size:13px;color:var(--muted);line-height:1.65}
+.principle-card b{color:var(--text);font-weight:500}
+
+/* ── Publications / refs ─────────────────────────────────────────────── */
+.ref-list{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.ref-item{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:12px 16px;font-size:12px;line-height:1.7}
+.ref-num{font-family:var(--font-mono);color:var(--teal);font-size:11px;margin-right:8px}
+.ref-text{color:var(--muted)}
+.ref-text em{color:var(--text);font-style:italic}
+
+/* ── Footer ─────────────────────────────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.footer-left{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.footer-left span{color:var(--teal)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-family:var(--font-mono);font-size:11px;color:var(--muted);letter-spacing:.06em}
+.footer-links a:hover{color:var(--teal);text-decoration:none}
+
+/* ── Responsive ─────────────────────────────────────────────────────── */
+@media(max-width:720px){
+  .about-grid{grid-template-columns:1fr}
+  .grade-grid{grid-template-columns:1fr 1fr}
+  .proj-header{padding:24px 20px 18px}
+  .proj-body{padding:0 20px 28px}
+  .section{padding:64px 5vw}
+  footer{flex-direction:column;align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <canvas id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="hero-content">
+    <p class="eyebrow">Oncology Bioinformatics &amp; AI · Md Tariqul Islam</p>
+    <h1>TNBC<br><span>Kinome</span><br>Research</h1>
+    <p class="hero-sub">Open-source computational frameworks for quantifying tyrosine kinase redundancy in Triple-Negative Breast Cancer — connecting patient genomic data to combination therapy strategy.</p>
+    <div class="hero-badges">
+      <span class="badge badge-teal"><span class="dot"></span>92 Kinases Modelled</span>
+      <span class="badge badge-blue"><span class="dot"></span>4,186 Pairwise Rs Scores</span>
+      <span class="badge badge-amber"><span class="dot"></span>TCGA · CPTAC · UniProt</span>
+      <span class="badge badge-red"><span class="dot"></span>Claude AI Reasoning Layer</span>
+    </div>
+    <div class="links-row" style="margin-top:36px">
+      <a href="https://github.com/mtariqi/FRAS-90" class="link-btn link-primary" target="_blank">↗ FRAS-90 Repository</a>
+      <a href="https://github.com/mtariqi/tnbc-genomics-agent" class="link-btn link-primary" target="_blank">↗ TNBC Genomics Agent</a>
+      <a href="https://github.com/mtariqi" class="link-btn link-ghost" target="_blank">github.com/mtariqi</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-line"></div>SCROLL TO EXPLORE</div>
+</section>
+
+<hr class="rule">
+
+<!-- ── ABOUT ─────────────────────────────────────────────────────────────── -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <p class="section-label">About</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>This project portfolio addresses a core challenge in precision oncology: <b>pathway redundancy</b> in Triple-Negative Breast Cancer (TNBC). When one kinase is blocked by a targeted therapy, cancer cells frequently activate a redundant kinase feeding the same downstream pathway — the primary mechanism behind acquired resistance.</p>
+        <p>Two complementary tools are developed here. <b>FRAS-90</b> provides a systems-level view of the entire 90-kinase tyrosine kinome using multi-omic redundancy scoring. <b>TNBC Genomics Agent</b> provides patient-level VCF-driven analysis with an AI reasoning layer for clinical narrative generation.</p>
+        <p>Both tools are open-source, locally deployable, and designed so patient genomic data never leaves the researcher's environment. The AI layer (Claude) acts as a <b>reasoning engine over structured data</b>, not a knowledge database — following the principle articulated by Truhn, Reis-Filho &amp; Kather, <em>Nature Medicine</em> 2023.</p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="stat-num">90</div><div class="stat-label">Human tyrosine kinases<br>58 RTKs · 32 NRTKs</div></div>
+        <div class="stat-card"><div class="stat-num">4,186</div><div class="stat-label">Pairwise redundancy<br>scores computed</div></div>
+        <div class="stat-card"><div class="stat-num">26</div><div class="stat-label">Grade I critical pairs<br>Rs ≥ 0.80</div></div>
+        <div class="stat-card"><div class="stat-num">45</div><div class="stat-label">Unit tests passing<br>across both projects</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ── PROJECTS ───────────────────────────────────────────────────────────── -->
+<section class="section" id="projects">
+  <div class="section-inner">
+    <p class="section-label">Projects</p>
+    <h2 class="section-title">Two tools,<br>one research question</h2>
+    <p class="section-sub">FRAS-90 maps kinome-wide redundancy. TNBC Genomics Agent maps patient-specific redundancy from VCF files. Together they cover systems-level and individual-level analysis.</p>
+
+    <div class="projects-grid">
+
+      <!-- ── FRAS-90 ─────────────────────────────────────────────────────── -->
+      <div class="proj-card">
+        <div class="proj-header" onclick="toggleProj('fras90')">
+          <div>
+            <p class="proj-tag">Systems-level · All 90 kinases</p>
+            <h3 class="proj-name"><span>FRAS-90</span> — Functional Redundancy<br>Analysis System</h3>
+            <p class="proj-desc">Multi-omic Rs scoring across the complete human tyrosine kinome. Integrates structural homology (UniProt/MUSCLE), transcriptomic co-expression (TCGA-TNBC), and phosphoproteomic substrate overlap (CPTAC) into a single weighted redundancy score.</p>
+          </div>
+          <span class="proj-toggle" id="fras90-toggle">+</span>
+        </div>
+        <div class="proj-body" id="fras90-body">
+
+          <div class="tabs" id="fras90-tabs">
+            <button class="tab active" onclick="showPane('fras90','formula',this)">Formula</button>
+            <button class="tab" onclick="showPane('fras90','arch',this)">Architecture</button>
+            <button class="tab" onclick="showPane('fras90','grades',this)">Grades</button>
+            <button class="tab" onclick="showPane('fras90','pairs',this)">Top pairs</button>
+            <button class="tab" onclick="showPane('fras90','data',this)">Data sources</button>
+          </div>
+
+          <!-- formula -->
+          <div class="pane active" id="fras90-formula">
+            <div class="formula-block">
+              <span class="hl">Rs</span> <span class="dim">=</span>
+              (<span class="hl">0.3</span> <span class="dim">×</span> <span class="hl">S</span>)
+              <span class="dim">+</span>
+              (<span class="hl">0.3</span> <span class="dim">×</span> <span class="hl">ρ</span>)
+              <span class="dim">+</span>
+              (<span class="hl">0.4</span> <span class="dim">×</span> <span class="hl">J</span>)
+            </div>
+            <table class="data-table">
+              <thead><tr><th>Component</th><th>Weight</th><th>Method</th><th>Source</th></tr></thead>
+              <tbody>
+                <tr><td><code>S</code> — Structural similarity</td><td>30%</td><td>MUSCLE MSA · catalytic domain sequence identity</td><td>UniProt</td></tr>
+                <tr><td><code>ρ</code> — Transcriptomic correlation</td><td>30%</td><td>Spearman rank · RNA-Seq across TNBC samples</td><td>TCGA-BRCA</td></tr>
+                <tr><td><code>J</code> — Substrate Jaccard overlap</td><td>40%</td><td>|PhosA ∩ PhosB| / |PhosA ∪ PhosB|</td><td>CPTAC</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:12px">J receives the highest weight because shared phosphorylation substrates represent the direct mechanistic basis for bypass resistance. Structural similarity and transcriptomic co-regulation provide supporting evidence for predicting redundancy before resistance emerges.</p>
+          </div>
+
+          <!-- arch -->
+          <div class="pane" id="fras90-arch">
+            <div class="pipeline-flow" style="margin-top:8px">
+              <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                  <div class="step-title">Structural homology mapping</div>
+                  <div class="step-detail">MUSCLE MSA of UniProt kinase catalytic domain sequences (~250–300 aa). Generates a 90×90 pairwise sequence identity matrix S.</div>
+                  <code class="step-cmd">python scripts/build_tree.py --input kinase_sequences.fasta --method muscle</code>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                  <div class="step-title">Transcriptomic co-expression analysis</div>
+                  <div class="step-detail">Spearman rank correlation of RNA-Seq (log₂ TPM) across TCGA-BRCA triple-negative cohort (ER−/PR−/HER2−, n&gt;400). Generates ρ matrix.</div>
+                  <code class="step-cmd">python scripts/analyzer.py --mode transcriptomic --cohort TCGA-TNBC --metric spearman</code>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                  <div class="step-title">Phosphoproteomic substrate convergence</div>
+                  <div class="step-detail">Jaccard index from CPTAC BRCA phosphorylation data — motif matching + experimental validation. Generates J matrix. Highest weight component.</div>
+                  <code class="step-cmd">python scripts/analyzer.py --mode proteomic --dataset CPTAC-BRCA --metric jaccard</code>
+                </div>
+              </div>
+              <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-content">
+                  <div class="step-title">Rs synthesis &amp; clinical reporting</div>
+                  <div class="step-detail">Weighted integration of S, ρ, J matrices. Grade I–IV classification. TNBC combination therapy recommendations. AI narrative via Claude.</div>
+                  <code class="step-cmd">python pipeline.py --gene EGFR --out results/report.json</code>
+                </div>
+              </div>
+            </div>
+            <div class="module-grid" style="margin-top:8px">
+              <div class="module-card"><div class="module-name">kinome_db.py</div><div class="module-desc">All 90 kinases — TNBC frequencies, substrates, pathways, inhibitors</div></div>
+              <div class="module-card"><div class="module-name">rs_scorer.py</div><div class="module-desc">Rs formula · 4,186 pairwise scores · DataLoader stubs for TCGA/CPTAC</div></div>
+              <div class="module-card"><div class="module-name">tnbc_interpreter.py</div><div class="module-desc">Grade I–IV mapping · TNBC case studies · patient report builder</div></div>
+              <div class="module-card"><div class="module-name">ai_agent.py</div><div class="module-desc">Claude reasoning layer — structured data → clinical narrative</div></div>
+            </div>
+          </div>
+
+          <!-- grades -->
+          <div class="pane" id="fras90-grades">
+            <div class="grade-grid">
+              <div class="grade-card g-crit">
+                <div class="grade-label">Grade I · Critical</div>
+                <div class="grade-rs" style="color:#F09595">Rs ≥ 0.80</div>
+                <div class="grade-strat">Dual inhibition required upfront. High overlap across all 3 metrics.</div>
+              </div>
+              <div class="grade-card g-high">
+                <div class="grade-label">Grade II · High</div>
+                <div class="grade-rs" style="color:var(--amber)">0.70–0.79</div>
+                <div class="grade-strat">Sequential monitoring. Substantial overlap in 2/3 metrics. Likely secondary resistance.</div>
+              </div>
+              <div class="grade-card g-mod">
+                <div class="grade-label">Grade III · Moderate</div>
+                <div class="grade-rs" style="color:#8CE396">0.40–0.69</div>
+                <div class="grade-strat">Partial, context-dependent overlap. Vertical pathway inhibition (MEK, AKT).</div>
+              </div>
+              <div class="grade-card g-uniq">
+                <div class="grade-label">Grade IV · Unique</div>
+                <div class="grade-rs" style="color:var(--muted)">&lt;0.40</div>
+                <div class="grade-strat">Minimal redundancy. Monotherapy viable with low bypass risk.</div>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.7">TNBC correction: the original FRAS-90 report used NSCLC as its Section 4.2 clinical example. This implementation replaces all clinical context with TNBC biology — TCGA-BRCA PAM50=Basal cohort and CPTAC BRCA phosphoproteomics throughout.</p>
+          </div>
+
+          <!-- pairs -->
+          <div class="pane" id="fras90-pairs">
+            <table class="data-table">
+              <thead><tr><th>Rank</th><th>Gene A</th><th>Gene B</th><th>Rs</th><th>Grade</th><th>Shared pathways</th></tr></thead>
+              <tbody id="pairTable"></tbody>
+            </table>
+          </div>
+
+          <!-- data -->
+          <div class="pane" id="fras90-data">
+            <table class="data-table">
+              <thead><tr><th>Source</th><th>Type</th><th>Samples</th><th>Coverage</th><th>Access</th></tr></thead>
+              <tbody>
+                <tr><td>TCGA-BRCA</td><td>Genomic · Epigenomic</td><td>~11,000 tumors</td><td>33 cancer types · TNBC subset</td><td><a href="https://portal.gdc.cancer.gov" target="_blank">NCI GDC Portal</a></td></tr>
+                <tr><td>CPTAC</td><td>Phosphoproteomics</td><td>~1,000 tumors</td><td>10+ cancer types · BRCA</td><td><a href="https://cptac-data-portal.georgetown.edu" target="_blank">CPTAC Portal</a></td></tr>
+                <tr><td>UniProt</td><td>Protein sequences</td><td>90 kinases</td><td>Complete human kinome</td><td><a href="https://www.uniprot.org" target="_blank">Public API</a></td></tr>
+                <tr><td>Manning et al. 2002</td><td>Kinome classification</td><td>518 kinases</td><td>Human kinome reference</td><td><em>Science</em> 298:1912</td></tr>
+              </tbody>
+            </table>
+            <div class="links-row">
+              <a href="https://github.com/mtariqi/FRAS-90" class="link-btn link-primary" target="_blank">↗ View on GitHub</a>
+              <a href="https://github.com/mtariqi/FRAS-90/blob/main/README.md" class="link-btn link-ghost" target="_blank">README</a>
+            </div>
+          </div>
+
+        </div><!-- /proj-body -->
+      </div><!-- /fras90 card -->
+
+      <!-- ── TNBC Genomics Agent ──────────────────────────────────────────── -->
+      <div class="proj-card" style="margin-top:2px">
+        <div class="proj-header" onclick="toggleProj('agent')">
+          <div>
+            <p class="proj-tag">Patient-level · VCF-driven</p>
+            <h3 class="proj-name"><span>TNBC</span> Genomics Agent</h3>
+            <p class="proj-desc">End-to-end pipeline from patient VCF files to combination therapy recommendations. Parses variants, annotates against a curated 10-kinase database, scores pathway redundancy, and synthesizes findings via an AI reasoning layer.</p>
+          </div>
+          <span class="proj-toggle" id="agent-toggle">+</span>
+        </div>
+        <div class="proj-body" id="agent-body">
+
+          <div class="tabs" id="agent-tabs">
+            <button class="tab active" onclick="showPane('agent','pipeline',this)">Pipeline</button>
+            <button class="tab" onclick="showPane('agent','modules',this)">Modules</button>
+            <button class="tab" onclick="showPane('agent','results',this)">Sample results</button>
+            <button class="tab" onclick="showPane('agent','ai',this)">AI layer</button>
+            <button class="tab" onclick="showPane('agent','refs',this)">References</button>
+          </div>
+
+          <!-- pipeline -->
+          <div class="pane active" id="agent-pipeline">
+            <div class="pipeline-flow" style="margin-top:8px">
+              <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">VCF parsing</div><div class="step-detail">Parses VCF 4.x files. Extracts all variants, annotates against GENE + EFFECT INFO fields. Severity scoring from VEP-style consequence terms (stop_gained → 1.0, missense → 0.70).</div></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Kinase annotation</div><div class="step-detail">Cross-references detected genes against curated 10-kinase database. Attaches TNBC frequency, pathway membership, inhibitor list, and known resistance mechanisms.</div></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Redundancy scoring</div><div class="step-detail">Sigmoid-based pathway redundancy: score = 1 − (1 / (1 + 0.8×(n−1))). Per-gene bypass risk from co-affected kinase count. Combination therapy ranking by evidence strength.</div></div></div>
+              <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">AI clinical synthesis</div><div class="step-detail">Structured VCF summary + redundancy report sent to Claude (claude-sonnet-4-6). Six-section clinical narrative output. All facts grounded in pipeline data — no hallucination risk.</div></div></div>
+            </div>
+            <code class="step-cmd" style="display:block;margin-top:4px;font-size:12px">python pipeline.py --vcf patient_1.vcf --out reports/patient_1_report.json</code>
+          </div>
+
+          <!-- modules -->
+          <div class="pane" id="agent-modules">
+            <div class="module-grid">
+              <div class="module-card"><div class="module-name">vcf_parser.py</div><div class="module-desc">VCF 4.x parsing · RTK/nRTK detection · severity scoring · locus fallback map</div></div>
+              <div class="module-card"><div class="module-name">kinase_db.py</div><div class="module-desc">10 curated kinases · TNBC frequencies · substrates · FDA-approved inhibitors</div></div>
+              <div class="module-card"><div class="module-name">redundancy_analyzer.py</div><div class="module-desc">Pathway redundancy scores · bypass risk · combination therapy suggestions</div></div>
+              <div class="module-card"><div class="module-name">ai_agent.py</div><div class="module-desc">Claude API · structured prompt builder · evidence-grounded reasoning</div></div>
+              <div class="module-card"><div class="module-name">pipeline.py</div><div class="module-desc">CLI orchestrator · 5-phase run · JSON output · verbose console reporting</div></div>
+              <div class="module-card"><div class="module-name">config.py</div><div class="module-desc">Centralised thresholds · env-var overrides · model selection</div></div>
+            </div>
+          </div>
+
+          <!-- results -->
+          <div class="pane" id="agent-results">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Sample analysis — patient_1.vcf: 13 variants, 10 kinase hits across 9 genes.</p>
+            <table class="data-table">
+              <thead><tr><th>Pathway</th><th>Redundancy score</th><th>Genes</th><th>Clinical implication</th></tr></thead>
+              <tbody>
+                <tr><td>MAPK/ERK</td><td><span class="rs-pill rs-crit">0.865</span></td><td>9 / 9 kinases</td><td>Monotherapy futile — multi-arm blockade required</td></tr>
+                <tr><td>PI3K/AKT</td><td><span class="rs-pill rs-crit">0.848</span></td><td>8 / 9 kinases</td><td>Dual MAPK+PI3K blockade is primary strategy</td></tr>
+                <tr><td>JAK/STAT</td><td><span class="rs-pill rs-high">0.444</span></td><td>3 kinases</td><td>Secondary — monitor compensatory activation</td></tr>
+                <tr><td>Wnt/β-catenin</td><td><span class="rs-pill rs-high">0.444</span></td><td>2 kinases</td><td>Relevant in mesenchymal TNBC subtype</td></tr>
+                <tr><td>FAK/integrin</td><td><span class="rs-pill rs-mod">0.200</span></td><td>1 kinase (SRC)</td><td>Monotherapy adequate for this pathway alone</td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:13px;color:var(--muted);margin-top:14px;line-height:1.7">Top combination: <strong style="color:var(--text)">EGFR + MET</strong> (Erlotinib + Crizotinib) — both share MAPK/ERK and PI3K/AKT. Supported by Sheng et al. (2017): synergistic growth inhibition in TNBC tumorgraft models.</p>
+            <div class="links-row">
+              <a href="https://github.com/mtariqi/tnbc-genomics-agent" class="link-btn link-primary" target="_blank">↗ View on GitHub</a>
+              <a href="https://github.com/mtariqi/tnbc-genomics-agent/blob/main/README.md" class="link-btn link-ghost" target="_blank">README</a>
+            </div>
+          </div>
+
+          <!-- ai -->
+          <div class="pane" id="agent-ai">
+            <div class="ai-box">
+              <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.75">The AI layer uses Claude (claude-sonnet-4-6) as a reasoning engine over structured bioinformatics output — not as a knowledge source. This eliminates hallucination risk for clinical data.</p>
+              <div class="principle-card"><b>Design principle (Truhn, Reis-Filho &amp; Kather, Nature Medicine 2023):</b> LLMs should be used as scientific reasoning engines, not knowledge databases. All clinical facts originate from the curated kinase database and the patient's VCF. Claude's role is synthesis, prioritisation, and narrative generation only.</div>
+              <div class="ai-formula">
+                Prompt architecture:<br>
+                <b>System:</b> <em>"You are an expert TNBC bioinformatician. Reason only from the provided structured input."</em><br>
+                <b>User:</b> <em>JSON(vcf_summary) + JSON(redundancy_report)</em><br>
+                <b>Output:</b> <em>6-section clinical narrative (variants → pathways → targets → combinations → resistance → priority action)</em>
+              </div>
+              <div class="principle-card"><b>Privacy:</b> All bioinformatics computation runs locally. Only the de-identified structured summary (gene names, pathway scores) is sent to the API. Real patient VCF files are gitignored — accidental exposure is structurally impossible.</div>
+            </div>
+          </div>
+
+          <!-- refs -->
+          <div class="pane" id="agent-refs">
+            <div class="ref-list">
+              <div class="ref-item"><span class="ref-num">[1]</span><span class="ref-text">Lehmann et al. <em>J Clin Invest</em> 2011 — TNBC molecular subtype classification (BL1/BL2/M/MSL/IM/LAR)</span></div>
+              <div class="ref-item"><span class="ref-num">[2]</span><span class="ref-text">Jaradat et al. <em>Technology in Cancer Research &amp; Treatment</em> 2024 — RTK targeting strategies in TNBC</span></div>
+              <div class="ref-item"><span class="ref-num">[3]</span><span class="ref-text">Sheng et al. <em>Oncotarget</em> 2017 — MET+EGFR crosstalk and dual inhibition in TNBC</span></div>
+              <div class="ref-item"><span class="ref-num">[4]</span><span class="ref-text">Finn et al. <em>Clin Cancer Res</em> 2011 — Phase II dasatinib (SRC inhibitor) in TNBC</span></div>
+              <div class="ref-item"><span class="ref-num">[5]</span><span class="ref-text">Huang et al. <em>Oncogene</em> 2020 — CRISPR screen: FGFR1 as top EGFR bypass gene in mesenchymal TNBC</span></div>
+              <div class="ref-item"><span class="ref-num">[6]</span><span class="ref-text">Truhn, Reis-Filho &amp; Kather. <em>Nature Medicine</em> 2023 — LLMs as scientific reasoning engines, not knowledge databases</span></div>
+              <div class="ref-item"><span class="ref-num">[7]</span><span class="ref-text">Zhang et al. <em>Briefings in Bioinformatics</em> 2026 — LLM agents for biological intelligence across genomics and biomedicine</span></div>
+              <div class="ref-item"><span class="ref-num">[8]</span><span class="ref-text">Manning et al. <em>Science</em> 2002 — The protein kinase complement of the human genome (kinome reference)</span></div>
+            </div>
+          </div>
+
+        </div><!-- /proj-body -->
+      </div><!-- /agent card -->
+
+    </div><!-- /projects-grid -->
+  </div>
+</section>
+
+<hr class="rule">
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-left">
+    <span>Md Tariqul Islam</span> · TNBC Kinome Research · MIT License · 2025–2026
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/mtariqi/FRAS-90" target="_blank">FRAS-90</a>
+    <a href="https://github.com/mtariqi/tnbc-genomics-agent" target="_blank">TNBC Agent</a>
+    <a href="https://github.com/mtariqi" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+<!-- ── Scripts ────────────────────────────────────────────────────────────── -->
+<script>
+// ── Kinome network canvas ─────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let nodes = [], W, H, raf;
+
+  const FAMILIES = [
+    {name:'EGFR',col:'#0DCFB4'},{name:'MET',col:'#378ADD'},
+    {name:'SRC', col:'#EF9F27'},{name:'FGFR',col:'#E24B4A'},
+    {name:'JAK', col:'#0DCFB4'},{name:'AXL', col:'#378ADD'},
+    {name:'ABL', col:'#EF9F27'},{name:'FAK', col:'#E24B4A'},
+    {name:'IGF', col:'#0DCFB4'},{name:'KDR', col:'#378ADD'},
+  ];
+
+  function resize(){
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    if(nodes.length===0) init();
+  }
+
+  function init(){
+    nodes = [];
+    for(let i=0;i<52;i++){
+      const f = FAMILIES[i%FAMILIES.length];
+      nodes.push({
+        x: Math.random()*W, y: Math.random()*H,
+        vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25,
+        r: 2+Math.random()*4,
+        col: f.col,
+        label: i<FAMILIES.length ? f.name : '',
+      });
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // edges
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x, dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.strokeStyle=`rgba(13,207,180,${.12*(1-d/140)})`;
+          ctx.lineWidth=.6;
+          ctx.stroke();
+        }
+      }
+    }
+    // nodes
+    nodes.forEach(n=>{
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=n.col+'55';
+      ctx.fill();
+      ctx.strokeStyle=n.col+'99';
+      ctx.lineWidth=.8;
+      ctx.stroke();
+      if(n.label){
+        ctx.font='10px IBM Plex Mono,monospace';
+        ctx.fillStyle=n.col+'BB';
+        ctx.fillText(n.label,n.x+n.r+4,n.y+3);
+      }
+    });
+  }
+
+  function update(){
+    nodes.forEach(n=>{
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    });
+  }
+
+  function loop(){draw();update();raf=requestAnimationFrame(loop);}
+  window.addEventListener('resize',resize);
+  resize();
+  loop();
+})();
+
+// ── Top pairs table ───────────────────────────────────────────────────────────
+const PAIRS = [
+  {a:'IGF1R',b:'INSR',Rs:.878,g:'I',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'FGFR2',b:'FGFR3',Rs:.864,g:'I',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'PDGFRB',b:'CSF1R',Rs:.858,g:'I',paths:'MAPK/ERK · PI3K/AKT · JAK/STAT'},
+  {a:'PDGFRA',b:'PDGFRB',Rs:.853,g:'I',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'FGFR3',b:'FGFR4',Rs:.851,g:'I',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'AXL',b:'MERTK',Rs:.807,g:'I',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'FGFR1',b:'FGFR2',Rs:.797,g:'II',paths:'MAPK/ERK · PI3K/AKT · STAT'},
+  {a:'ABL1',b:'ABL2',Rs:.792,g:'II',paths:'MAPK/ERK · F-actin · DDR'},
+  {a:'JAK1',b:'JAK2',Rs:.788,g:'II',paths:'JAK/STAT · PI3K/AKT'},
+  {a:'SRC',b:'YES1',Rs:.779,g:'II',paths:'MAPK/ERK · PI3K/AKT · FAK'},
+  {a:'EGFR',b:'ERBB2',Rs:.682,g:'III',paths:'MAPK/ERK · PI3K/AKT'},
+  {a:'EGFR',b:'MET',Rs:.573,g:'III',paths:'MAPK/ERK · PI3K/AKT · Wnt'},
+];
+const gradeClass = g => g==='I'?'rs-crit':g==='II'?'rs-high':'rs-mod';
+document.getElementById('pairTable').innerHTML = PAIRS.map((p,i)=>`
+  <tr>
+    <td style="color:var(--muted);font-family:var(--font-mono);font-size:11px">${i+1}</td>
+    <td><strong>${p.a}</strong></td>
+    <td><strong>${p.b}</strong></td>
+    <td><span class="rs-pill ${gradeClass(p.g)}">${p.Rs.toFixed(3)}</span></td>
+    <td><span class="rs-pill ${gradeClass(p.g)}">Grade ${p.g}</span></td>
+    <td style="color:var(--muted);font-size:12px">${p.paths}</td>
+  </tr>`).join('');
+
+// ── Accordion ─────────────────────────────────────────────────────────────────
+function toggleProj(id){
+  const body = document.getElementById(id+'-body');
+  const tog  = document.getElementById(id+'-toggle');
+  const open = body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  tog.classList.toggle('open',!open);
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function showPane(proj,pane,el){
+  document.querySelectorAll('#'+proj+'-tabs .tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#'+proj+'-body .pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(proj+'-'+pane).classList.add('active');
+}
+</script>
+</body>
+</html>
