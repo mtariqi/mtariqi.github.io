@@ -310,6 +310,8 @@
   }
   .proj-card.card-teal::before { background: linear-gradient(90deg, #0F6E56, #5DD3A5); }
   .proj-card.card-blue::before { background: linear-gradient(90deg, #0C447C, #4BA3F5); }
+  .proj-card.card-amber::before { background: linear-gradient(90deg, #633806, #EF9F27); }
+  .proj-card.card-purple::before { background: linear-gradient(90deg, #3C3489, #8B7FE8); }
   .proj-card-num { font-size: 11px; color: var(--text-ter); margin-bottom: 0.5rem; }
   .proj-card-title { font-size: 16px; font-weight: 600; margin-bottom: 0.35rem; }
   .proj-card-sub { font-size: 12px; color: var(--text-sec); margin-bottom: 1rem; line-height: 1.5; }
@@ -343,7 +345,7 @@
   <div class="header-inner">
     <p class="header-eyebrow">Bioinformatics Portfolio &nbsp;·&nbsp; Northeastern University &nbsp;·&nbsp; BINF6310</p>
     <h1 class="header-name">Md Tariqul Islam</h1>
-    <p class="header-title">Computational Genomics &nbsp;·&nbsp; NGS Pipeline Development &nbsp;·&nbsp; HPC &amp; Containerized Workflows</p>
+    <p class="header-title">Computational Genomics &nbsp;·&nbsp; NGS Pipeline Development &nbsp;·&nbsp; HPC &amp; Containerized Workflows &nbsp;·&nbsp; Data Engineering</p>
 
     <div class="tag-row">
       <span class="tag hl">SPAdes</span>
@@ -375,7 +377,7 @@
         <div class="stat-lbl">DEGs identified</div>
       </div>
       <div class="stat">
-        <div class="stat-val">2</div>
+        <div class="stat-val">4</div>
         <div class="stat-lbl">Major projects</div>
       </div>
     </div>
@@ -455,6 +457,66 @@
           </div>
         </div>
         <span class="proj-card-link">View full project →</span>
+      </a>
+
+      <!-- Project 3 -->
+      <a class="proj-card card-amber" href="https://github.com/mtariqi/cdc-healthcare-streaming-etl-pipeline" target="_blank">
+        <div class="proj-card-num">Project 03</div>
+        <div class="proj-card-title">CDC Healthcare Streaming ETL Pipeline</div>
+        <div class="proj-card-sub">End-to-end data engineering pipeline ingesting CDC Open Data API into PostgreSQL, with Airflow orchestration, Terraform-provisioned infrastructure, and ML-driven public health monitoring</div>
+        <div class="proj-card-tags">
+          <span class="proj-card-tag">Python</span>
+          <span class="proj-card-tag">PostgreSQL</span>
+          <span class="proj-card-tag">Airflow</span>
+          <span class="proj-card-tag">Terraform</span>
+          <span class="proj-card-tag">Docker</span>
+          <span class="proj-card-tag">Scikit-Learn</span>
+        </div>
+        <div class="proj-card-stats">
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#633806">5</div>
+            <div class="proj-card-stat-lbl">Quality gates</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#633806">7</div>
+            <div class="proj-card-stat-lbl">Pipeline stages</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0F6E56">IaC</div>
+            <div class="proj-card-stat-lbl">Terraform</div>
+          </div>
+        </div>
+        <span class="proj-card-link">View repository →</span>
+      </a>
+
+      <!-- Project 4 -->
+      <a class="proj-card card-purple" href="https://github.com/mtariqi/nih-clinical-trials-lakehouse-pipeline" target="_blank">
+        <div class="proj-card-num">Project 04</div>
+        <div class="proj-card-title">NIH Clinical Trials Lakehouse Pipeline</div>
+        <div class="proj-card-sub">Cloud-native medallion lakehouse: NIH API → Kafka → Spark Structured Streaming → S3 bronze/silver/gold → dbt + Great Expectations → ML predictions, fully orchestrated by Airflow on AWS</div>
+        <div class="proj-card-tags">
+          <span class="proj-card-tag">Kafka</span>
+          <span class="proj-card-tag">Spark</span>
+          <span class="proj-card-tag">dbt</span>
+          <span class="proj-card-tag">Great Expectations</span>
+          <span class="proj-card-tag">MLflow</span>
+          <span class="proj-card-tag">Redshift</span>
+        </div>
+        <div class="proj-card-stats">
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#3C3489">4</div>
+            <div class="proj-card-stat-lbl">Lakehouse layers</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#3C3489">3</div>
+            <div class="proj-card-stat-lbl">Airflow DAGs</div>
+          </div>
+          <div class="proj-card-stat">
+            <div class="proj-card-stat-val" style="color:#0F6E56">AWS</div>
+            <div class="proj-card-stat-lbl">Cloud-native</div>
+          </div>
+        </div>
+        <span class="proj-card-link">View repository →</span>
       </a>
 
     </div>
@@ -769,7 +831,7 @@ workflow {
     <div class="proj-header">
       <div>
         <div class="proj-title">Technical Skills Summary</div>
-        <div class="proj-sub">Full stack of competencies demonstrated across BINF6310 projects</div>
+        <div class="proj-sub">Full stack of competencies demonstrated across BINF6310 projects and independent data engineering builds</div>
       </div>
       <span class="badge badge-teal">Employer-Ready</span>
     </div>
@@ -794,6 +856,12 @@ workflow {
       <div class="skill-item"><div style="font-size:20px">📦</div><div class="skill-name">Singularity</div><div class="skill-cat">Containers</div></div>
       <div class="skill-item"><div style="font-size:20px">🐧</div><div class="skill-name">Linux / Bash</div><div class="skill-cat">Shell scripting</div></div>
       <div class="skill-item"><div style="font-size:20px">🗄️</div><div class="skill-name">NCBI / SRA</div><div class="skill-cat">Data retrieval</div></div>
+      <div class="skill-item"><div style="font-size:20px">🐘</div><div class="skill-name">PostgreSQL</div><div class="skill-cat">Data warehousing</div></div>
+      <div class="skill-item"><div style="font-size:20px">🔁</div><div class="skill-name">Apache Airflow</div><div class="skill-cat">Orchestration</div></div>
+      <div class="skill-item"><div style="font-size:20px">🧱</div><div class="skill-name">Terraform</div><div class="skill-cat">Infrastructure-as-Code</div></div>
+      <div class="skill-item"><div style="font-size:20px">📨</div><div class="skill-name">Kafka</div><div class="skill-cat">Streaming</div></div>
+      <div class="skill-item"><div style="font-size:20px">⚡</div><div class="skill-name">Spark</div><div class="skill-cat">Distributed processing</div></div>
+      <div class="skill-item"><div style="font-size:20px">🧮</div><div class="skill-name">dbt</div><div class="skill-cat">Data transformation</div></div>
     </div>
 
     <hr class="divider">
@@ -808,6 +876,7 @@ workflow {
           <li>Nextflow DSL2 — the nf-core standard used in pharma and research</li>
           <li>Public data retrieval and validation from NCBI, SRA, Zenodo</li>
           <li>Quantitative result interpretation (N50, L50, GC%, alignment rates)</li>
+          <li>Production data engineering — ETL, orchestration, IaC, and streaming lakehouses</li>
         </ul>
       </div>
       <div class="card">
@@ -819,6 +888,7 @@ workflow {
           <li>Research Data Analyst (genomics / pharma)</li>
           <li>Genomics Software Developer</li>
           <li>Clinical Bioinformatician (AMR, pathogen genomics)</li>
+          <li>Data Engineer / Senior Data Scientist (Healthcare)</li>
         </ul>
       </div>
     </div>
@@ -826,9 +896,9 @@ workflow {
     <div class="card" style="margin-top:1rem;border-color:#B5D4F4;background:#f5f9fe">
       <div class="card-label" style="color:#185FA5">GitHub — view all project code</div>
       <p style="font-size:13px;line-height:1.75;color:#333">
-        All Nextflow scripts, assembly workflows, and analysis code are available at
+        All Nextflow scripts, assembly workflows, data engineering pipelines, and analysis code are available at
         <a href="https://github.com/mtariqi" target="_blank" style="color:#185FA5;font-weight:500">github.com/mtariqi</a>.
-        Repositories include annotated <code>.nf</code> pipeline scripts, QUAST result files, and this portfolio page hosted via GitHub Pages.
+        Repositories include annotated <code>.nf</code> pipeline scripts, QUAST result files, production ETL/lakehouse pipelines, and this portfolio page hosted via GitHub Pages.
       </p>
     </div>
   </div>
@@ -838,7 +908,7 @@ workflow {
 <footer>
   <div class="inner">
     <p>Md Tariqul Islam &nbsp;·&nbsp; Northeastern University BINF6310 &nbsp;·&nbsp; <a href="https://github.com/mtariqi">github.com/mtariqi</a></p>
-    <p style="margin-top:6px;font-size:11px;color:#aaa">Built with SPAdes · QUAST · Nextflow · Bowtie2 · Singularity · Explorer HPC</p>
+    <p style="margin-top:6px;font-size:11px;color:#aaa">Built with SPAdes · QUAST · Nextflow · Bowtie2 · Singularity · Explorer HPC · Airflow · Terraform · Kafka · Spark · dbt</p>
   </div>
 </footer>
 
