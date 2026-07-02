@@ -22,7 +22,7 @@
 
 ## 🧬 About
 
-Bioinformatics portfolio showcasing computational genomics, NGS pipeline development, and HPC/containerized workflows — built as part of Northeastern University's BINF6310.
+Bioinformatics portfolio showcasing computational genomics, NGS pipeline development,Data Science and HPC/containerized workflows — built as part of Northeastern University's BINF6310.
 
 ## 📂 Featured Projects
 
