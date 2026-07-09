@@ -1,69 +1,148 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0A0F1E,100:0F6E56&height=180&section=header&text=Md%20Tariqul%20Islam&fontSize=42&fontColor=5DD3A5&animation=fadeIn&fontAlignY=38&desc=Data%20Science%20%7C%20Data%20Engineering%20%7C%20Bioinformatics&descSize=16&descAlignY=58&descColor=E8EDF5" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:081C15,100:1B4332&height=220&section=header&text=Md%20Tariqul%20Islam&fontSize=46&fontColor=E9F5F2&animation=fadeIn&fontAlignY=36&desc=Senior%20Research%20Scientist%20|%20Computational%20Biology%20|%20AI%20for%20Precision%20Medicine&descSize=18&descAlignY=56&descColor=CDEFE5" width="100%"/>
 
-[![Live Portfolio](https://img.shields.io/badge/-Live%20Portfolio-0A0F1E?style=for-the-badge&logo=githubpages&logoColor=5DD3A5)](https://mtariqi.github.io)
-[![GitHub](https://img.shields.io/badge/-github.com/mtariqi-181717?style=for-the-badge&logo=github)](https://github.com/mtariqi)
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/mdtariqulscired)
+# 🧬 Building AI-Driven Computational Methods for Precision Medicine
+
+[![Portfolio](https://img.shields.io/badge/Research_Portfolio-000000?style=for-the-badge&logo=githubpages)](https://mtariqi.github.io)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/mdtariqulscired)
+[![ORCID](https://img.shields.io/badge/ORCID-A6CE39?style=for-the-badge&logo=orcid)](https://orcid.org/0009-0009-6545-8040)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:mtiumea@gmail.com)
 
 </div>
 
+---
+
+# 👨‍🔬 About Me
+
+I am a **Senior Research Scientist** specializing in **Computational Biology, Bioinformatics, Artificial Intelligence, and Precision Medicine**.
+
+My research integrates **genomics, transcriptomics, multi-omics data integration, machine learning, and large language models (LLMs)** to transform complex biological data into actionable insights for biomarker discovery, therapeutic target identification, and AI-assisted drug discovery.
+
+Currently, I work as a **Bioinformatician at the University of Arkansas for Medical Sciences (UAMS)**, where I develop scalable **NGS pipelines**, reproducible computational workflows, and AI-assisted analytical methods using **TCGA**, **CPTAC**, and high-performance computing environments.
+
+---
+
+# 🔬 Current Research
+
+- 🧬 Precision Oncology
+- 🧬 Cancer Genomics
+- 🧬 Computational Biology
+- 🧬 Multi-Omics Integration
+- 💊 Drug Discovery
+- 🤖 Artificial Intelligence
+- 🧠 Machine Learning & Deep Learning
+- 📚 Large Language Models (LLMs)
+- ⚡ Agentic AI
+- ☁ Scientific Computing
+
+---
+
+# 🚀 Flagship Research Projects
+
+| Project | Scientific Question | Technologies |
+|---------|---------------------|--------------|
+| 🧬 **Hybrid-CORE** *(In Progress)* | AI-driven discovery of rational combination therapies for Triple-Negative Breast Cancer | Knowledge Graphs • Multimodal AI • Reinforcement Learning • LLMs |
+| 🧬 **RTK/NRTK Breast Cancer Research** | Understanding compensatory kinase redundancy using TCGA and CPTAC datasets | TCGA • CPTAC • Python • Network Analysis • Multi-Omics |
+| 🤖 **Biomedical Agentic RAG** | Automated biomedical evidence synthesis and hypothesis generation | LangChain • Amazon Bedrock • RAG • LLMs |
+| 🧠 **Genomic Foundation Models** *(Research)* | Transformer models for genomic sequence modelling and variant interpretation | PyTorch • Transformers • DNA Language Models |
+
+---
+
+# 💻 Computational Biology Projects
+
+| Project | Description | Technologies |
+|---------|-------------|--------------|
+| 🧬 RNA-Seq Differential Expression | Breast cancer differential expression and pathway analysis | STAR • DESeq2 • R/Bioconductor |
+| 🧬 De Novo Genome Assembly | Assembly and quality assessment of *S. aureus* genome | SPAdes • QUAST • Singularity |
+| 🧬 NGS Analysis Pipeline | Reproducible variant discovery workflow | BWA • GATK • DeepVariant • Snakemake |
+| 🧬 TNBC Kinome Analysis | Tyrosine kinase redundancy analysis | TCGA • CPTAC • UniProt |
+
+---
+
+# ☁ AI & Data Engineering Projects
+
+| Project | Description | Technologies |
+|---------|-------------|--------------|
+| ⚙ CDC Healthcare Streaming ETL | End-to-end healthcare data engineering platform | Python • PostgreSQL • Airflow • Terraform |
+| 🏗 NIH Clinical Trials Lakehouse | Medallion architecture with streaming analytics | Kafka • Spark • dbt • AWS |
+| 🤖 Biomedical RAG | Retrieval-Augmented Generation for biomedical literature | LangChain • Bedrock • Vector DB |
+
+---
+
+# ⚙ Technical Expertise
+
+### Programming
+
+Python • R • SQL • Bash
+
+### Artificial Intelligence
+
+PyTorch • TensorFlow • Scikit-Learn • Hugging Face • LangChain • Amazon Bedrock
+
+### Bioinformatics
+
+BWA • GATK • DeepVariant • STAR • DESeq2 • Snakemake • Nextflow • SPAdes • QUAST
+
+### Data Engineering
+
+Apache Airflow • Spark • Kafka • dbt • Docker • MLflow • Great Expectations
+
+### Cloud Computing
+
+AWS • Terraform • PostgreSQL • Linux • HPC
+
+---
+
+# 📈 GitHub Statistics
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Scikit--Learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white" />
-  <img src="https://img.shields.io/badge/R%20%2F%20Bioconductor-276DC3?style=flat-square&logo=r&logoColor=white" />
-  <img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white" />
-  <img src="https://img.shields.io/badge/Apache%20Airflow-017CEE?style=flat-square&logo=apacheairflow&logoColor=white" />
-  <img src="https://img.shields.io/badge/Terraform-7B42BC?style=flat-square&logo=terraform&logoColor=white" />
-  <img src="https://img.shields.io/badge/AWS-FF9900?style=flat-square&logo=amazonaws&logoColor=white" />
-  <img src="https://img.shields.io/badge/Nextflow-24C8DD?style=flat-square&logo=nextflow&logoColor=white" />
+
+<img height="170" src="https://github-readme-stats.vercel.app/api?username=mtariqi&show_icons=true&theme=tokyonight&hide_border=true&count_private=true"/>
+
+<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=mtariqi&layout=compact&theme=tokyonight&hide_border=true"/>
+
+</p>
+
+<p align="center">
+
+<img src="https://github-readme-streak-stats.herokuapp.com/?user=mtariqi&theme=tokyonight&hide_border=true"/>
+
 </p>
 
 ---
 
-## 🔗 About
+# 📄 Publications & Scientific Contributions
 
-Bioinformatics and data science portfolio showcasing computational genomics, NGS pipeline development, **Data Science**, and HPC/containerized workflows — built as part of Northeastern University's BINF6310, alongside independent production-grade data engineering projects.
-
----
-
-## 🔬 Data Science Projects
-
-These projects specifically demonstrate statistical modeling, machine learning, and quantitative analysis skills:
-
-| Project | Data Science Component | Techniques |
-|---|---|---|
-| 📊 [RNA-Seq Differential Gene Expression](https://mtariqi.github.io/rnaseq_project.html) | Statistical differential expression analysis on breast cancer tumor vs. normal tissue | DESeq2 (negative binomial GLM), volcano plots, hierarchical clustering heatmaps, R/Bioconductor |
-| ⚙️ [CDC Healthcare Streaming ETL Pipeline](https://github.com/mtariqi/cdc-healthcare-streaming-etl-pipeline) | Predictive modeling on public health indicators | Random Forest Regressor (Scikit-Learn), feature engineering, MAE/R² evaluation |
-| 🏗️ [NIH Clinical Trials Lakehouse Pipeline](https://github.com/mtariqi/nih-clinical-trials-lakehouse-pipeline) | ML experiment tracking on curated lakehouse data | MLflow model registry, dbt-transformed feature sets, Great Expectations data quality gates |
-| 🧬 [De Novo Genome Assembly](https://mtariqi.github.io/#assembly) | Quantitative assembly quality benchmarking | N50/L50/GC% statistical interpretation, QUAST metrics evaluation |
+- Peer-reviewed publications
+- Conference presentations
+- Research posters
+- Open-source scientific software
+- Manuscripts in preparation
 
 ---
 
-## 📂 Featured Projects
+# 🤝 Collaboration
 
-| Project | Description | Stack |
-|---|---|---|
-| 🧬 [De Novo Genome Assembly](https://mtariqi.github.io/#assembly) | *S. aureus* mutant strain reconstructed from Illumina reads | SPAdes, QUAST, Singularity |
-| 📊 [RNA-Seq Differential Expression](https://mtariqi.github.io/rnaseq_project.html) | Breast cancer tumor vs. normal — DESeq2, volcano plots | STAR, DESeq2, R/Bioconductor |
-| 🎯 [TNBC Kinome Research](https://mtariqi.github.io/tnbc_kinome.html) | Tyrosine kinase redundancy in Triple-Negative Breast Cancer | TCGA, CPTAC, UniProt |
-| ⚙️ [CDC Healthcare Streaming ETL Pipeline](https://github.com/mtariqi/cdc-healthcare-streaming-etl-pipeline) | End-to-end CDC Open Data API → PostgreSQL pipeline with Airflow, Terraform, and ML monitoring | Python, PostgreSQL, Airflow, Terraform, Docker |
-| 🏗️ [NIH Clinical Trials Lakehouse Pipeline](https://github.com/mtariqi/nih-clinical-trials-lakehouse-pipeline) | Medallion lakehouse (bronze/silver/gold) with Kafka streaming, dbt, Great Expectations, and MLflow on AWS | Kafka, Spark, dbt, AWS, Airflow |
-| 🧫 [Genomics Dashboard](https://mtariqi.github.io/genomics_dashboard.html) | Interactive genomics data visualization | HTML/JS |
+I welcome collaborations in:
 
----
-
-## 🛠️ Skills Summary
-
-**Data Science & ML:** `Python` `Scikit-Learn` `Random Forest` `R / Bioconductor` `DESeq2` `Statistical Modeling` `MLflow`
-**Data Engineering:** `PostgreSQL` `Apache Airflow` `Terraform` `Kafka` `Spark` `dbt` `Great Expectations` `Docker`
-**Bioinformatics:** `SPAdes` `QUAST` `Nextflow DSL2` `Bowtie2` `Singularity` `FastQC` `Cutadapt` `Samtools` `Bcftools`
-**Cloud & Infra:** `AWS (S3, IAM, Redshift)` `Linux/Bash` `Explorer HPC` `NCBI/SRA`
+- Computational Biology
+- Precision Oncology
+- Cancer Genomics
+- Multi-Omics Integration
+- Drug Discovery
+- Artificial Intelligence
+- Biomedical NLP
+- Scientific Machine Learning
+- Bioinformatics
+- Healthcare AI
 
 ---
 
-## 📫 Contact
+<div align="center">
 
-📍 Toronto, ON &nbsp;|&nbsp; ✉️ mtiumea@gmail.com &nbsp;|&nbsp; 🔗 [Portfolio](https://mtariqi.github.io)
+### *Transforming Biological Data into Intelligent Therapeutic Discovery*
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F6E56,100:0A0F1E&height=100&section=footer" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:1B4332,100:081C15&height=120&section=footer"/>
+
+</div>
